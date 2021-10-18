@@ -6,6 +6,8 @@ using FacultyApi.DataBase;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace FacultyApi.Controllers
 {
@@ -14,37 +16,86 @@ namespace FacultyApi.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly IStudentsRepository _studentsRepository;
+        private readonly ILogger<StudentsController> _logger;
 
-        public StudentsController(IStudentsRepository studentsRepository)
+        public StudentsController(IStudentsRepository studentsRepository, ILogger<StudentsController> logger)
         {
             _studentsRepository = studentsRepository;
+            _logger = logger;
         }
 
         [HttpGet()]
-        public IEnumerable<Student> GetAll()
+        public IActionResult GetAll()
         {
-            return _studentsRepository.GetAll();
+            _logger.LogInformation($"StudentsGetAll");
+
+            var student = _studentsRepository
+                .GetAll()
+                .Select(s => new DtoStudent(s))
+                .ToList();
+
+            if (!student.Any())
+            {
+                return NotFound("Students list empty.");
+            }
+
+            return Ok(student);
         }
 
 
         [HttpGet()]
         [Route("{id:int}")]
-        public Student Get(int id)
+        public IActionResult Get(int id)
         {
-            return _studentsRepository.Get(id);
+            var student = _studentsRepository.Get(id);
+            if (student == null)
+            {
+                return NotFound("Student not found.");
+            }
+
+            return Ok(student);
         }
 
         [HttpPost]
-        public int Post([FromBody] Student student)
+        public int Post([FromBody] DtoStudent student)
         {
-            _studentsRepository.Update(student);
+            _logger.LogInformation($"StudentsPost:\n{JsonConvert.SerializeObject(student)}");
+
+            var id = student.StudentId ?? 0;
+            var oldStudent = _studentsRepository.Get(id);
+
+            var newStudent = new Student()
+            {
+                StudentId = id,
+                FirstName = student.FirstName ?? oldStudent.FirstName,
+                SecondName = student.SecondName ?? oldStudent.SecondName,
+                MiddleName = student.MiddleName ?? oldStudent.MiddleName,
+                YearEntry = student.YearEntry ?? oldStudent.YearEntry,
+                PhoneNumber = student.PhoneNumber ?? oldStudent.PhoneNumber,
+                Expelled = student.Expelled ?? oldStudent.Expelled,
+                EducationTypeId = student.EducationTypeId ?? oldStudent.EducationTypeId,
+                GroupId = student.GroupId ?? oldStudent.GroupId,
+            };
+            _studentsRepository.Update(newStudent);
             return 1;
         }
 
         [HttpPut]
-        public int Put([FromBody] Student student)
+        public int Put([FromBody] DtoStudent student)
         {
-            _studentsRepository.Add(student);
+            var newStudent = new Student()
+            {
+                StudentId = null,
+                FirstName = student.FirstName,
+                SecondName = student.SecondName,
+                MiddleName = student.MiddleName,
+                YearEntry = student.YearEntry ?? DateTime.MinValue,
+                PhoneNumber = student.PhoneNumber,
+                Expelled = student.Expelled ?? false,
+                EducationTypeId = student.EducationTypeId,
+                GroupId = student.GroupId,
+            };
+            _studentsRepository.Add(newStudent);
             return 1;
         }
 

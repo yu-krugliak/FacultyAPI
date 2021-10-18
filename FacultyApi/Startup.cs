@@ -31,6 +31,8 @@ namespace FacultyApi
             });
             services.AddTransient<IStudentsRepository, StudentsRepository>();
             services.AddTransient<IGroupsRepository, GroupsRepository>();
+            services.AddTransient<IEducationTypesRepository, EducationTypesRepository>();
+
 
             services.AddControllers();
         }
@@ -43,7 +45,7 @@ namespace FacultyApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 

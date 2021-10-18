@@ -39,7 +39,7 @@ namespace FacultyApi.Repository
         public void Update(Group group)
         {
             _context.Groups.Update(group);
-                _context.SaveChanges();
+            _context.SaveChanges();
         }
 
         public void Delete(int id)

@@ -24,7 +24,9 @@ namespace FacultyApi.Repository
 
         public Student Get(int id)
         {
-            return _context.Students.Find(id);
+            return _context.Students
+                .AsNoTracking()
+                .FirstOrDefault(s => s.StudentId == id);
         }
 
         public IEnumerable<Student> GetAll()
