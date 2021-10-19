@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FacultyApiClientWinForms.Enums;
 using FacultyApiClientWinForms.Extensions;
@@ -13,6 +15,12 @@ namespace FacultyApiClientWinForms.Forms.MainForm
         {
             var add = new AddStudent();
             add.ShowDialog();
+
+            var bs = (BindingSource)dataGridViewStudents.DataSource;
+            var students = (List<Student>)bs.DataSource;
+            students.Add(add.Student);
+
+            dataGridViewStudents.ResetEndEdit();
         }
 
         private void bUpdateStudent_Click(object sender, EventArgs e)
@@ -38,13 +46,45 @@ namespace FacultyApiClientWinForms.Forms.MainForm
             _client.DeleteStudent(id);
             dataGridViewStudents.Rows.RemoveAt(index);
 
-            MessageBox.Show("Object deleted");
+            //MessageBox.Show("Object deleted");
         }
 
-        private void refresh_Click(object sender, EventArgs e)
+        private async void refresh_Click(object sender, EventArgs e)
         {
             Log.Debug("Refreshing students list...");
-            dataGridViewStudents.Fill(_client.GetAllStudents());
+
+            Enabled = false;
+
+            await Task.Run(() =>
+            {
+                RunInUI(() =>
+                {
+                    var secondName = !string.IsNullOrEmpty(textBox1.Text) ? textBox1.Text : null;
+                    var groupId = (int?)groupsFilterComboBox.SelectedValue == -1
+                        ? null
+                        : (int?)groupsFilterComboBox.SelectedValue;
+                    var expelled = expelledComboBox.SelectedIndex == 0
+                        ? null
+                        : (bool?)expelledComboBox.SelectedValue;
+
+                    var students = _client.GetAllStudents(secondName, groupId, expelled);
+
+                    dataGridViewStudents.Fill(students);
+
+                    Enabled = true;
+                });
+            });
+        }
+
+        private void RunInUI(Action action)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(action);
+                return;
+            }
+
+            action();
         }
     }
 }

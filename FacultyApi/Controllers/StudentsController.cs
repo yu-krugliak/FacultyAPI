@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FacultyApi.DataBase;
+using FacultyApi.Models;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,29 +25,36 @@ namespace FacultyApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet()]
-        public IActionResult GetAll()
+        //[HttpGet()]
+        //public IActionResult GetAll()
+        //{
+        //    _logger.LogInformation($"StudentsGetAll");
+
+        //    var student = _studentsRepository
+        //        .GetAll()
+        //        .Select(s => new StudentDto(s));
+
+        //    return Ok(student);
+        //}
+
+        [HttpGet]
+        public IActionResult GetFiltered([FromQuery]int? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName)
         {
-            _logger.LogInformation($"StudentsGetAll");
+            _logger.LogInformation($"Students GetFiltered");
 
             var student = _studentsRepository
-                .GetAll()
-                .Select(s => new DtoStudent(s))
-                .ToList();
-
-            if (!student.Any())
-            {
-                return NotFound("Students list empty.");
-            }
+                .GetAllFiltered(groupId, expelled, secondName)
+                .Select(s => new StudentDto(s));
 
             return Ok(student);
         }
 
-
-        [HttpGet()]
+        [HttpGet]
         [Route("{id:int}")]
         public IActionResult Get(int id)
         {
+            _logger.LogInformation($"StudentGet, id: {id}");
+
             var student = _studentsRepository.Get(id);
             if (student == null)
             {
@@ -57,9 +65,9 @@ namespace FacultyApi.Controllers
         }
 
         [HttpPost]
-        public int Post([FromBody] DtoStudent student)
+        public IActionResult Post([FromBody] StudentDto student)
         {
-            _logger.LogInformation($"StudentsPost:\n{JsonConvert.SerializeObject(student)}");
+            _logger.LogInformation($"StudentPost:\n{JsonConvert.SerializeObject(student)}");
 
             var id = student.StudentId ?? 0;
             var oldStudent = _studentsRepository.Get(id);
@@ -76,16 +84,19 @@ namespace FacultyApi.Controllers
                 EducationTypeId = student.EducationTypeId ?? oldStudent.EducationTypeId,
                 GroupId = student.GroupId ?? oldStudent.GroupId,
             };
+
             _studentsRepository.Update(newStudent);
-            return 1;
+
+            return Ok("Student updated.");
         }
 
         [HttpPut]
-        public int Put([FromBody] DtoStudent student)
+        public IActionResult Put([FromBody] StudentDto student)
         {
+            _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
+
             var newStudent = new Student()
             {
-                StudentId = null,
                 FirstName = student.FirstName,
                 SecondName = student.SecondName,
                 MiddleName = student.MiddleName,
@@ -95,16 +106,20 @@ namespace FacultyApi.Controllers
                 EducationTypeId = student.EducationTypeId,
                 GroupId = student.GroupId,
             };
+
             _studentsRepository.Add(newStudent);
-            return 1;
+
+            return Ok("New student created.");
         }
 
         [HttpDelete]
         [Route("{id:int}")]
-        public int Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _logger.LogInformation($"StudentDelete, id: {id}");
+
             _studentsRepository.Delete(id);
-            return 1;
+            return Ok("Student deleted.");
         }
     }
 }

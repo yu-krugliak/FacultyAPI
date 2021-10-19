@@ -8,6 +8,7 @@ namespace FacultyApi.Repository
         void Add(Student student);
         Student Get(int id);
         IEnumerable<Student> GetAll();
+        IEnumerable<Student> GetAllFiltered(int? groupId, bool? expelled, string secondName);
 
         void Update(Student student);
         void Delete(int id);

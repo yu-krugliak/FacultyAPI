@@ -1,12 +1,13 @@
 ﻿using System;
+using FacultyApi.DataBase;
 
-namespace FacultyApi.DataBase
+namespace FacultyApi.Models
 {
-    public class DtoStudent
+    public class StudentDto
     {
-        public DtoStudent(){}
+        public StudentDto(){}
 
-        public DtoStudent(Student student)
+        public StudentDto(Student student)
         {
             StudentId = student.StudentId;
             SecondName = student.SecondName;
@@ -18,7 +19,7 @@ namespace FacultyApi.DataBase
             GroupId = student.GroupId;
             GroupName = student.Group?.Name;
             EducationTypeId = student.EducationTypeId;
-            Education = student.EducationType.Name;
+            Education = student.EducationType?.Name;
         }
 
         public int? StudentId { get; set; }

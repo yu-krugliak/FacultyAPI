@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FacultyApi.DataBase;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,25 @@ namespace FacultyApi.Repository
                 .Include(s => s.Group)
                 .AsNoTracking()
                 .ToList();
+        }
+
+        public IEnumerable<Student> GetAllFiltered(int? groupId, bool? expelled, string secondName)
+        {
+            var students = _context.Students
+                .Include(s => s.EducationType)
+                .Include(s => s.Group)
+                .AsNoTracking();
+
+            if (groupId != null)
+                students = students.Where(s => s.GroupId == groupId);
+
+            if (expelled != null)
+                students = students.Where(s => s.Expelled == expelled);
+
+            if (secondName != null)
+                students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()));
+
+            return students;
         }
 
         public void Update(Student student)

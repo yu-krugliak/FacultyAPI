@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using FacultyApiClientWinForms.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using Serilog;
@@ -29,10 +30,8 @@ namespace FacultyApiClientWinForms.Client
             }
         }
 
-
-        public IEnumerable<T> GetAll<T>(string entityName)
+        public IEnumerable<T> GetAll<T>(RestRequest request)
         {
-            var request = new RestRequest($"{entityName}", Method.GET);
             LogRequest(request);
 
             var response = _client.Execute<IEnumerable<T>>(request);
@@ -41,6 +40,40 @@ namespace FacultyApiClientWinForms.Client
             return response.Data;
         }
 
+        public IEnumerable<T> GetAll<T>(string entityName)
+        {
+            var request = new RestRequest($"{entityName}", Method.GET);
+            return GetAll<T>(request);
+        }
+
+        public IEnumerable<Student> GetAllStudents(string secondName = null, int? groupId = null, bool? expelled = null)
+        {
+            var request = new RestRequest("students", Method.GET);
+            request.AddQueryParameter("secondname", secondName);
+            request.AddQueryParameter("groupid", groupId?.ToString());
+            request.AddQueryParameter("expelled", expelled?.ToString());
+
+            return GetAll<Student>(request);
+        }
+
+        public IEnumerable<Lecturer> GetAllLecturers(string secondName = null, string degree = null, int? subjectId = null)
+        {
+            var request = new RestRequest("lecturers", Method.GET);
+            request.AddQueryParameter("secondname", secondName);
+            request.AddQueryParameter("degree", degree);
+            request.AddQueryParameter("subjectid", subjectId?.ToString());
+
+            return GetAll<Lecturer>(request);
+        }
+
+        public IEnumerable<Lesson> GetAllLessons(int? groupId = null)
+        {
+            var request = new RestRequest("lessons", Method.GET);
+            request.AddQueryParameter("groupid", groupId?.ToString());
+
+            return GetAll<Lesson>(request);
+        }
+        
         private void LogRequest(IRestRequest request, object body = null)
         {
             var requestToLog = new
@@ -74,7 +107,7 @@ namespace FacultyApiClientWinForms.Client
                 .AddJsonBody(record);
 
             _client.Execute(request);
-            MessageBox.Show("Object added");
+            //MessageBox.Show("Object added");
         }
 
         public void Update<T>(string entityName, T record)
@@ -83,7 +116,7 @@ namespace FacultyApiClientWinForms.Client
                 .AddJsonBody(record);
 
             _client.Execute(request);
-            MessageBox.Show("Object updated");
+            //MessageBox.Show("Object updated");
         }
 
         public void Delete(string entityName, int id)

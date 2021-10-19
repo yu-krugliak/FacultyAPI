@@ -10,10 +10,10 @@ namespace FacultyApiClientWinForms.Extensions
 {
     public static class FacultyClientStudentExtensions
     {
-        public static IEnumerable<Student> GetAllStudents(this FacultyClient client)
-        {
-            return client.GetAll<Student>("students");
-        }
+        //public static IEnumerable<Student> GetAllStudents(this FacultyClient client)
+        //{
+        //    return client.GetAll<Student>("students");
+        //}
 
         public static void AddStudent(this FacultyClient client, Student student)
         {

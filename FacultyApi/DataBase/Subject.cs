@@ -6,9 +6,9 @@ namespace FacultyApi.DataBase
     public class Subject
     {
         [Key]
-        public int SubjectId { get; set; }
+        public int? SubjectId { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Lesson> Lessons { get; set; }
+        //public ICollection<Lesson> Lessons { get; set; }
     }
 }

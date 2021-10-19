@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 
 namespace FacultyApi
@@ -32,7 +33,9 @@ namespace FacultyApi
             services.AddTransient<IStudentsRepository, StudentsRepository>();
             services.AddTransient<IGroupsRepository, GroupsRepository>();
             services.AddTransient<IEducationTypesRepository, EducationTypesRepository>();
-
+            services.AddTransient<ISubjectsRepository, SubjectsRepository>();
+            services.AddTransient<ILecturersRepository, LecturersRepository>();
+            services.AddTransient<ILessonsRepository, LessonsRepository>();
 
             services.AddControllers();
         }
@@ -46,6 +49,8 @@ namespace FacultyApi
             }
 
             //app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseRouting();
 

@@ -6,7 +6,7 @@ namespace FacultyApi.DataBase
     public class Lesson
     {
         [Key] 
-        public int LessonId { get; set; }
+        public int? LessonId { get; set; }
         public DateTime Semester { get; set; }
 
         public int? SubjectId { get; set; }
@@ -14,6 +14,9 @@ namespace FacultyApi.DataBase
 
         public int? LecturerId { get; set; }
         public Lecturer Lecturer { get; set; }
+
+        public int? GroupId { get; set; }
+        public Group Group { get; set; }
 
         public DateTime DayAndTime { get; set; }
     }

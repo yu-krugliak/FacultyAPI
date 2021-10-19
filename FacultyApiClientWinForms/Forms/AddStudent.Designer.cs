@@ -139,7 +139,7 @@
             // 
             this.label9.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 275);
+            this.label9.Location = new System.Drawing.Point(3, 284);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(127, 20);
             this.label9.TabIndex = 8;
@@ -148,58 +148,66 @@
             // textStudentId
             // 
             this.textStudentId.Dock = System.Windows.Forms.DockStyle.Left;
+            this.textStudentId.Enabled = false;
             this.textStudentId.Location = new System.Drawing.Point(136, 3);
             this.textStudentId.Name = "textStudentId";
-            this.textStudentId.Size = new System.Drawing.Size(237, 27);
+            this.textStudentId.Size = new System.Drawing.Size(235, 27);
             this.textStudentId.TabIndex = 9;
+            this.textStudentId.Text = "1";
             // 
             // textMiddleName
             // 
             this.textMiddleName.Dock = System.Windows.Forms.DockStyle.Left;
             this.textMiddleName.Location = new System.Drawing.Point(136, 102);
             this.textMiddleName.Name = "textMiddleName";
-            this.textMiddleName.Size = new System.Drawing.Size(237, 27);
+            this.textMiddleName.Size = new System.Drawing.Size(235, 27);
             this.textMiddleName.TabIndex = 9;
+            this.textMiddleName.Text = "Иванович";
             // 
             // textYearEntry
             // 
             this.textYearEntry.Dock = System.Windows.Forms.DockStyle.Left;
             this.textYearEntry.Location = new System.Drawing.Point(136, 135);
             this.textYearEntry.Name = "textYearEntry";
-            this.textYearEntry.Size = new System.Drawing.Size(237, 27);
+            this.textYearEntry.Size = new System.Drawing.Size(235, 27);
             this.textYearEntry.TabIndex = 9;
+            this.textYearEntry.Text = "2021-09-01";
             // 
             // textPhoneNumber
             // 
             this.textPhoneNumber.Dock = System.Windows.Forms.DockStyle.Left;
             this.textPhoneNumber.Location = new System.Drawing.Point(136, 168);
             this.textPhoneNumber.Name = "textPhoneNumber";
-            this.textPhoneNumber.Size = new System.Drawing.Size(237, 27);
+            this.textPhoneNumber.Size = new System.Drawing.Size(235, 27);
             this.textPhoneNumber.TabIndex = 9;
+            this.textPhoneNumber.Text = "0950763465";
             // 
             // textExpelled
             // 
             this.textExpelled.Dock = System.Windows.Forms.DockStyle.Left;
             this.textExpelled.Location = new System.Drawing.Point(136, 201);
             this.textExpelled.Name = "textExpelled";
-            this.textExpelled.Size = new System.Drawing.Size(237, 27);
+            this.textExpelled.Size = new System.Drawing.Size(235, 27);
             this.textExpelled.TabIndex = 9;
+            this.textExpelled.Text = "False";
             // 
             // textFirstName
             // 
             this.textFirstName.Dock = System.Windows.Forms.DockStyle.Left;
             this.textFirstName.Location = new System.Drawing.Point(136, 69);
             this.textFirstName.Name = "textFirstName";
-            this.textFirstName.Size = new System.Drawing.Size(237, 27);
+            this.textFirstName.Size = new System.Drawing.Size(235, 27);
             this.textFirstName.TabIndex = 9;
+            this.textFirstName.Text = "Иван";
             // 
             // textSecondName
             // 
             this.textSecondName.Dock = System.Windows.Forms.DockStyle.Left;
             this.textSecondName.Location = new System.Drawing.Point(136, 36);
             this.textSecondName.Name = "textSecondName";
-            this.textSecondName.Size = new System.Drawing.Size(237, 27);
+            this.textSecondName.Size = new System.Drawing.Size(235, 27);
             this.textSecondName.TabIndex = 9;
+            this.textSecondName.Text = "Иванов";
             // 
             // tableLayoutPanel1
             // 
@@ -224,7 +232,7 @@
             this.tableLayoutPanel1.Controls.Add(this.textYearEntry, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(26, 34);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(26, 35);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 9;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -236,7 +244,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(394, 306);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(394, 323);
             this.tableLayoutPanel1.TabIndex = 10;
             // 
             // comboBoxEducation
@@ -246,7 +254,7 @@
             this.comboBoxEducation.FormattingEnabled = true;
             this.comboBoxEducation.Location = new System.Drawing.Point(136, 268);
             this.comboBoxEducation.Name = "comboBoxEducation";
-            this.comboBoxEducation.Size = new System.Drawing.Size(237, 28);
+            this.comboBoxEducation.Size = new System.Drawing.Size(235, 28);
             this.comboBoxEducation.TabIndex = 13;
             // 
             // comboBoxGroups
@@ -257,14 +265,14 @@
             this.comboBoxGroups.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.comboBoxGroups.Location = new System.Drawing.Point(136, 234);
             this.comboBoxGroups.Name = "comboBoxGroups";
-            this.comboBoxGroups.Size = new System.Drawing.Size(237, 28);
+            this.comboBoxGroups.Size = new System.Drawing.Size(235, 28);
             this.comboBoxGroups.TabIndex = 13;
             // 
             // buttonOk
             // 
-            this.buttonOk.Location = new System.Drawing.Point(88, 362);
+            this.buttonOk.Location = new System.Drawing.Point(88, 363);
             this.buttonOk.Name = "buttonOk";
-            this.buttonOk.Size = new System.Drawing.Size(117, 30);
+            this.buttonOk.Size = new System.Drawing.Size(117, 29);
             this.buttonOk.TabIndex = 11;
             this.buttonOk.Text = "OK";
             this.buttonOk.UseVisualStyleBackColor = true;
@@ -272,9 +280,9 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(234, 362);
+            this.buttonCancel.Location = new System.Drawing.Point(234, 363);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(118, 30);
+            this.buttonCancel.Size = new System.Drawing.Size(118, 29);
             this.buttonCancel.TabIndex = 12;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -289,7 +297,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(451, 414);
+            this.ClientSize = new System.Drawing.Size(451, 405);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOk);
             this.Controls.Add(this.tableLayoutPanel1);

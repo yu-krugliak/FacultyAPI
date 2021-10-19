@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FacultyApiClientWinForms.Client;
 using FacultyApiClientWinForms.Enums;
@@ -14,6 +15,8 @@ namespace FacultyApiClientWinForms.Forms
         private readonly FacultyClient _client = FacultyClient.Instance;
         private readonly FormType _formType;
         private readonly Student _student;
+
+        public Student Student => _student;
 
         public AddStudent() : this(new Student(), FormType.Add) {}
 
@@ -32,20 +35,45 @@ namespace FacultyApiClientWinForms.Forms
             textPhoneNumber.Text = student.PhoneNumber;
             textExpelled.Text = student.Expelled.ToString();
 
-            var groups = _client.GetAllGroups();
-            comboBoxGroups.DataSource = groups;
-            comboBoxGroups.DisplayMember = "Name";
-            comboBoxGroups.ValueMember = "GroupId";
-            comboBoxGroups.SelectedValue = student.GroupId;
-
-            var educations = _client.GetAllEducations();
-            comboBoxEducation.DataSource = educations;
-            comboBoxEducation.DisplayMember = "Name";
-            comboBoxEducation.ValueMember = "EducationTypeId";
-            comboBoxEducation.SelectedValue = student.EducationTypeId;
-
             textStudentId.Validating += TextStudentIdOnValidating;
             textYearEntry.Validating += TextYearEntryOnValidating;
+            Shown += OnShown;
+        }
+
+        private async void OnShown(object? sender, EventArgs e)
+        {
+            Enabled = false;
+            await Task.Run(() =>
+            {
+                var groups = _client.GetAllGroups();
+                var educations = _client.GetAllEducations();
+
+                RunInUI(() =>
+                {
+                    comboBoxGroups.DataSource = groups;
+                    comboBoxGroups.DisplayMember = "Name";
+                    comboBoxGroups.ValueMember = "GroupId";
+                    comboBoxGroups.SelectedValue = _student.GroupId;
+
+                    comboBoxEducation.DataSource = educations;
+                    comboBoxEducation.DisplayMember = "Name";
+                    comboBoxEducation.ValueMember = "EducationTypeId";
+                    comboBoxEducation.SelectedValue = _student.EducationTypeId;
+
+                    Enabled = true;
+                });
+            });
+        }
+
+        private void RunInUI(Action action)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(action);
+                return;
+            }
+
+            action();
         }
 
         private void TextYearEntryOnValidating(object sender, CancelEventArgs e)
@@ -83,7 +111,9 @@ namespace FacultyApiClientWinForms.Forms
             _student.PhoneNumber = textPhoneNumber.Text;
             _student.Expelled = bool.Parse(textExpelled.Text);
             _student.GroupId = (int)comboBoxGroups.SelectedValue;
+            _student.GroupName = ((Group)comboBoxGroups.SelectedItem).Name;
             _student.EducationTypeId = (int)comboBoxEducation.SelectedValue;
+            _student.Education = ((EducationType)comboBoxEducation.SelectedItem).Name;
 
             switch (_formType)
             {

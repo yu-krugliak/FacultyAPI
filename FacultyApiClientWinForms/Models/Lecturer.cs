@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace FacultyApi.DataBase
+﻿namespace FacultyApiClientWinForms.Models
 {
     public class Lecturer
     {
-        [Key]
         public int? LecturerId { get; set; }
 
         public string SecondName { get; set; }
@@ -17,6 +13,5 @@ namespace FacultyApi.DataBase
 
         public string PhoneNumber { get; set; }
 
-         public ICollection<Subject> Subjects { get; set; }
     }
 }

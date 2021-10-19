@@ -31,7 +31,7 @@ namespace FacultyApi.Repository
 
         public IEnumerable<Group> GetAll()
         {
-            return _context.Groups                   ///TODO
+            return _context.Groups                   
                 .AsNoTracking()
                 .ToList();
         }
@@ -44,7 +44,7 @@ namespace FacultyApi.Repository
 
         public void Delete(int id)
         {
-            var record = new Group() { GroupId = id };  ///TODO
+            var record = new Group() { GroupId = id }; 
 
             _context.Groups.Attach(record);
             _context.Groups.Remove(record);

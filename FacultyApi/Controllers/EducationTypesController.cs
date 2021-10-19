@@ -26,45 +26,61 @@ namespace FacultyApi.Controllers
 
 
         [HttpGet]
-        public IEnumerable<EducationType> GetAll()
+        public IActionResult GetAll()
         {
             _logger.LogInformation($"EducationTypesGetAll");
 
-            return _educationTypesRepository.GetAll();
-        }
+            var education = _educationTypesRepository
+                .GetAll();
 
+            return Ok(education);
+        }
+        
 
         [HttpGet()]
         [Route("{id:int}")]
-        public EducationType Get(int id)
+        public IActionResult Get(int id)
         {
-            return _educationTypesRepository.Get(id);
+            _logger.LogInformation($"EducationTypesGet, id: {id}");
+
+            var education = _educationTypesRepository.Get(id);
+            if (education == null)
+            {
+                return NotFound("Education Types not found.");
+            }
+
+            return Ok(education);
         }
 
 
         [HttpPost]
-        public int Post([FromBody] EducationType educationType)
+        public IActionResult Post([FromBody] EducationType educationType)
         {
             _logger.LogInformation($"EducationTypesPost:\n{JsonConvert.SerializeObject(educationType)}");
+
             _educationTypesRepository.Update(educationType);
-            return 1;
+            return Ok("Education Type updated.");
         }
 
 
         [HttpPut]
-        public int Put([FromBody] EducationType educationType)
+        public IActionResult Put([FromBody] EducationType educationType)
         {
-            _educationTypesRepository.Add(educationType);
-            return 1;
-        }
+            _logger.LogInformation($"EducationTypePut:\n{JsonConvert.SerializeObject(educationType)}");
 
+            _educationTypesRepository.Add(educationType);
+            return Ok("New education type created.");
+        }
+      
 
         [HttpDelete]
         [Route("{id:int}")]
-        public int Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _logger.LogInformation($"EducationTypeDelete, id: {id}");
+
             _educationTypesRepository.Delete(id);
-            return 1;
+            return Ok("Education type deleted.");
         }
     }
 }

@@ -26,86 +26,62 @@ namespace FacultyApi.Controllers
 
 
         [HttpGet]
-        public IEnumerable<Group> GetAll()
+        public IActionResult GetAll()
         {
             _logger.LogInformation($"GroupsGetAll");
 
-            return _groupsRepository.GetAll();
+            var group = _groupsRepository
+                    .GetAll();
+
+            return Ok(group);
         }
 
 
         [HttpGet()]
         [Route("{id:int}")]
-        public Group Get(int id)
+        public IActionResult Get(int id)
         {
-            return _groupsRepository.Get(id);
+            _logger.LogInformation($"GroupGet, id: {id}");
+
+            var group = _groupsRepository.Get(id);
+            if (group == null)
+            {
+                return NotFound("Group not found.");
+            }
+
+            return Ok(group);
         }
 
 
         [HttpPost]
-        public int Post([FromBody] Group group)
+        public IActionResult Post([FromBody] Group group)
         {
-            _logger.LogInformation($"GroupsPost:\n{JsonConvert.SerializeObject(group)}");
+            _logger.LogInformation($"GroupPost:\n{JsonConvert.SerializeObject(group)}");
+
             _groupsRepository.Update(group);
-            return 1;
+            return Ok("Group updated.");
         }
 
 
         [HttpPut]
-        public int Put([FromBody] Group group)
+        public IActionResult Put([FromBody] Group group)
         {
+            _logger.LogInformation($"GroupPut:\n{JsonConvert.SerializeObject(group)}");
+
             _groupsRepository.Add(group);
-            return 1;
+            return Ok("New group created.");
         }
 
 
         [HttpDelete]
         [Route("{id:int}")]
-        public int Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _logger.LogInformation($"GroupDelete, id: {id}");
+
             _groupsRepository.Delete(id);
-            return 1;
+            return Ok("Group deleted.");
         }
-
-
-        /// <summary>
-        /// Creates a TodoItem.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Item1",
-        ///        "isComplete": true
-        ///     }
-        ///
-        /// </remarks>
-        /// <returns>A newly created TodoItem</returns>
-        /// <response code="201">Returns the newly created item</response>
-        ///// <response code="400">If the item is null</response>            
-        //[ProducesResponseType(StatusCodes.Status201Created)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //var groups = _groupsRepository.GetAll();
-
-                    //if (groups == null) 
-                    //    return NotFound();
-
-                    //return Ok(groups);
-        //[HttpGet]
-                //[Route("{id:int}")]
-                //public IActionResult Get(int id)
-                //{
-                //    var group = _groupsRepository.Get(id);
-
-                //    if (group == null)
-                //    {
-                //        NotFound();
-                //    }
-
-                //    return Ok(group);
-                //}
 
     }
 }
