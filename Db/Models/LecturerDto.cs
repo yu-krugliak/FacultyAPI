@@ -5,7 +5,7 @@ namespace FacultyApi.Models
     public class LecturerDto
     {
         public LecturerDto() {}
-
+        //еееееееееее
         public LecturerDto(Lecturer lecturer)
         {
             LecturerId = lecturer.LecturerId;

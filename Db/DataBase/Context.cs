@@ -16,7 +16,7 @@ namespace FacultyApi.DataBase
         public Context(DbContextOptions<Context> options) : base(options)
         {
             //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
 
             //Groups.Add(new Group()
             //{
