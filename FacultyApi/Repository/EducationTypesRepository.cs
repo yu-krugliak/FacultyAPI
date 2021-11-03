@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,13 +19,13 @@ namespace FacultyApi.Repository
 
         public void Add(EducationType educationType)
         {
-            educationType.EducationTypeId = null;
+            //educationType.EducationTypeId = null;
             
             _context.EducationTypes.Add(educationType);
             _context.SaveChanges();
         }
 
-        public EducationType Get(int id)
+        public EducationType Get(Guid id)
         {
             return _context.EducationTypes.Find(id);
         }
@@ -42,7 +43,7 @@ namespace FacultyApi.Repository
                 _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new EducationType() { EducationTypeId = id };  ///TODO
 

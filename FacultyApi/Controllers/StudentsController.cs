@@ -50,8 +50,8 @@ namespace FacultyApi.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
-        public IActionResult Get(int id)
+        [Route("{id:guid}")]
+        public IActionResult Get(Guid id)
         {
             _logger.LogInformation($"StudentGet, id: {id}");
 
@@ -69,7 +69,7 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"StudentPost:\n{JsonConvert.SerializeObject(student)}");
 
-            var id = student.StudentId ?? 0;
+            var id = student.StudentId; //?? Guid.Empty;
             var oldStudent = _studentsRepository.Get(id);
 
             var newStudent = new Student()
@@ -113,8 +113,8 @@ namespace FacultyApi.Controllers
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public IActionResult Delete(int id)
+        [Route("{id:guid}")]
+        public IActionResult Delete(Guid id)
         {
             _logger.LogInformation($"StudentDelete, id: {id}");
 

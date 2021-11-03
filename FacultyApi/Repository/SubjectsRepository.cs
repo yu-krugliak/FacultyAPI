@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FacultyApi.DataBase;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +17,13 @@ namespace FacultyApi.Repository
 
         public void Add(Subject subject)
         {
-            subject.SubjectId = null;
+            //subject.SubjectId = null;
 
             _context.Subjects.Add(subject);
             _context.SaveChanges();
         }
 
-        public Subject Get(int id)
+        public Subject Get(Guid id)
         {
             return _context.Subjects.Find(id);
         }
@@ -39,7 +40,7 @@ namespace FacultyApi.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new Subject() { SubjectId = id };
 

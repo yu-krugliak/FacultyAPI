@@ -39,7 +39,7 @@ namespace FacultyApi.Controllers
 
 
         [HttpGet]
-        public IActionResult GetFiltered([FromQuery] int? subjectId, [FromQuery] string degree, [FromQuery] string secondName)
+        public IActionResult GetFiltered([FromQuery] Guid? subjectId, [FromQuery] string degree, [FromQuery] string secondName)
         {
             _logger.LogInformation($"Lecturers GetFiltered");
 
@@ -51,8 +51,8 @@ namespace FacultyApi.Controllers
         }
 
         [HttpGet()]
-        [Route("{id:int}")]
-        public IActionResult Get(int id)
+        [Route("{id:guid}")]
+        public IActionResult Get(Guid id)
         {
             _logger.LogInformation($"LecturerGet, id: {id}");
 
@@ -87,8 +87,8 @@ namespace FacultyApi.Controllers
 
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public IActionResult Delete(int id)
+        [Route("{id:guid}")]
+        public IActionResult Delete(Guid id)
         {
             _logger.LogInformation($"LecturerDelete, id: {id}");
 

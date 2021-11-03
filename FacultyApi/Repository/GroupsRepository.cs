@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -18,13 +19,12 @@ namespace FacultyApi.Repository
 
         public void Add(Group group)
         {
-            group.GroupId = null;
             
             _context.Groups.Add(group);
             _context.SaveChanges();
         }
 
-        public Group Get(int id)
+        public Group Get(Guid id)
         {
             return _context.Groups.Find(id);
         }
@@ -42,7 +42,7 @@ namespace FacultyApi.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new Group() { GroupId = id }; 
 

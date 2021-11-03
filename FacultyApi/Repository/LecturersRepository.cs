@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FacultyApi.DataBase;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +17,13 @@ namespace FacultyApi.Repository
 
         public void Add(Lecturer lecturer)
         {
-            lecturer.LecturerId = null;
+            //lecturer.LecturerId = null;
 
             _context.Lecturers.Add(lecturer);
             _context.SaveChanges();
         }
 
-        public Lecturer Get(int id)
+        public Lecturer Get(Guid id)
         {
             return _context.Lecturers.Find(id);
         }
@@ -34,7 +35,7 @@ namespace FacultyApi.Repository
                 .AsNoTracking();
         }
 
-        public IEnumerable<Lecturer> GetAllFiltered(int? subjectId, string degree, string secondName)
+        public IEnumerable<Lecturer> GetAllFiltered(Guid? subjectId, string degree, string secondName)
         {
             var lecturer = GetAll();
 
@@ -56,7 +57,7 @@ namespace FacultyApi.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new Lecturer() { LecturerId = id };
 

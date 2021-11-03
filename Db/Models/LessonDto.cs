@@ -20,7 +20,7 @@ namespace FacultyApi.Models
             DayAndTime = lesson.DayAndTime;
         }
 
-        public int? LessonId { get; set; }
+        public Guid LessonId { get; set; }
         public DateTime? Semester { get; set; }
 
         public int? SubjectId { get; set; }

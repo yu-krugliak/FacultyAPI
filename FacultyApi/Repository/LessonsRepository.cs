@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FacultyApi.DataBase;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +17,12 @@ namespace FacultyApi.Repository
 
         public void Add(Lesson lesson)
         {
-            lesson.LessonId = null;
 
             _context.Lessons.Add(lesson);
             _context.SaveChanges();
         }
 
-        public Lesson Get(int id)
+        public Lesson Get(Guid id)
         {
             return _context.Lessons
                 .AsNoTracking()
@@ -53,7 +53,7 @@ namespace FacultyApi.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new Lesson() { LessonId = id };
 

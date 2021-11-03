@@ -38,8 +38,8 @@ namespace FacultyApi.Controllers
         
 
         [HttpGet()]
-        [Route("{id:int}")]
-        public IActionResult Get(int id)
+        [Route("{id:guid}")]
+        public IActionResult Get(Guid id)
         {
             _logger.LogInformation($"EducationTypesGet, id: {id}");
 
@@ -74,8 +74,8 @@ namespace FacultyApi.Controllers
       
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public IActionResult Delete(int id)
+        [Route("{id:guid}")]
+        public IActionResult Delete(Guid id)
         {
             _logger.LogInformation($"EducationTypeDelete, id: {id}");
 

@@ -1,11 +1,11 @@
 ﻿using FacultyApi.DataBase;
+using System;
 
 namespace FacultyApi.Models
 {
     public class LecturerDto
     {
         public LecturerDto() {}
-        //еееееееееее
         public LecturerDto(Lecturer lecturer)
         {
             LecturerId = lecturer.LecturerId;
@@ -17,7 +17,7 @@ namespace FacultyApi.Models
             PhoneNumber = lecturer.PhoneNumber;
         }
 
-        public int? LecturerId { get; set; }
+        public Guid LecturerId { get; set; }
 
         public string SecondName { get; set; }
         public string FirstName { get; set; }

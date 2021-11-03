@@ -25,7 +25,11 @@ namespace FacultyApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddDbContext<Context>(options => options.UseSqlServer(Configuration["ConnectionStrings:FacultyDb"]));
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<Context>(optionsBuilder =>
+                    optionsBuilder.UseNpgsql(Configuration.GetConnectionString("FacultyDb"),
+                        contextOptionsBuilder => contextOptionsBuilder
+                            .MigrationsAssembly("DbMigrations")));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FacultyApi", Version = "v1" });

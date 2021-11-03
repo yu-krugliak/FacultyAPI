@@ -17,13 +17,13 @@ namespace FacultyApi.Repository
 
         public void Add(Student student)
         {
-            student.StudentId = null;
+            ///*s*/student.StudentId = null;
 
             _context.Students.Add(student);
             _context.SaveChanges();
         }
 
-        public Student Get(int id)
+        public Student Get(Guid id)
         {
             return _context.Students
                 .AsNoTracking()
@@ -64,7 +64,7 @@ namespace FacultyApi.Repository
             _context.SaveChanges();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var record = new Student() { StudentId = id };
 

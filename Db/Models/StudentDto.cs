@@ -22,7 +22,7 @@ namespace FacultyApi.Models
             Education = student.EducationType?.Name;
         }
 
-        public int? StudentId { get; set; }
+        public Guid StudentId { get; set; }
 
         public string SecondName { get; set; }
         public string FirstName { get; set; }
