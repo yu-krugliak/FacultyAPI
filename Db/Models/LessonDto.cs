@@ -23,13 +23,13 @@ namespace FacultyApi.Models
         public Guid LessonId { get; set; }
         public DateTime? Semester { get; set; }
 
-        public int? SubjectId { get; set; }
+        public Guid? SubjectId { get; set; }
         public string SubjectName { get; set; }
 
-        public int? LecturerId { get; set; }
+        public Guid? LecturerId { get; set; }
         public string LecturerSecondName { get; set; }
 
-        public int? GroupId { get; set; }
+        public Guid? GroupId { get; set; }
         public string GroupName { get; set; }
 
         public DateTime? DayAndTime { get; set; }

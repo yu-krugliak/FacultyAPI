@@ -28,10 +28,14 @@ namespace FacultyApi.DataBase
                 entity.Property(student => student.StudentId).ValueGeneratedOnAdd();
                 entity.Property(student => student.SecondName);
                 entity.Property(student => student.FirstName);
-
-                entity.Property(student => student.Name);
-
                 entity.Property(student => student.MiddleName);
+
+                //entity.Property(student => student.Name1);
+                //entity.Property(student => student.Name1);
+                //entity.Property(student => student.Name3);
+                //entity.Property(student => student.Name4);
+
+
                 entity.Property(student => student.YearEntry);
                 entity.Property(student => student.PhoneNumber);
                 entity.Property(student => student.Expelled);

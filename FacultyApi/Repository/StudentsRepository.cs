@@ -39,7 +39,7 @@ namespace FacultyApi.Repository
                 .ToList();
         }
 
-        public IEnumerable<Student> GetAllFiltered(int? groupId, bool? expelled, string secondName)
+        public IEnumerable<Student> GetAllFiltered(Guid? groupId, bool? expelled, string secondName)
         {
             var students = _context.Students
                 .Include(s => s.EducationType)

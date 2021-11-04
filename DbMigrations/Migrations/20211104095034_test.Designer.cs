@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DbMigrations.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20211103144645_testm2jj")]
-    partial class testm2jj
+    [Migration("20211104095034_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,34 +87,25 @@ namespace DbMigrations.Migrations
                     b.Property<DateTime>("DayAndTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("GroupId1")
+                    b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("LecturerId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("LecturerId1")
+                    b.Property<Guid?>("LecturerId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Semester")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("SubjectId1")
+                    b.Property<Guid?>("SubjectId")
                         .HasColumnType("uuid");
 
                     b.HasKey("LessonId");
 
-                    b.HasIndex("GroupId1");
+                    b.HasIndex("GroupId");
 
-                    b.HasIndex("LecturerId1");
+                    b.HasIndex("LecturerId");
 
-                    b.HasIndex("SubjectId1");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Lessons");
                 });
@@ -125,10 +116,7 @@ namespace DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("EducationTypeId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("EducationTypeId1")
+                    b.Property<Guid?>("EducationTypeId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("Expelled")
@@ -137,16 +125,22 @@ namespace DbMigrations.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("GroupId1")
+                    b.Property<Guid?>("GroupId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Name1")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name2")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name3")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name4")
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
@@ -160,9 +154,9 @@ namespace DbMigrations.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.HasIndex("EducationTypeId1");
+                    b.HasIndex("EducationTypeId");
 
-                    b.HasIndex("GroupId1");
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Students");
                 });
@@ -173,10 +167,7 @@ namespace DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int?>("LecturerId")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid?>("LecturerId1")
+                    b.Property<Guid?>("LecturerId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -184,7 +175,7 @@ namespace DbMigrations.Migrations
 
                     b.HasKey("SubjectId");
 
-                    b.HasIndex("LecturerId1");
+                    b.HasIndex("LecturerId");
 
                     b.ToTable("Subjects");
                 });
@@ -193,15 +184,15 @@ namespace DbMigrations.Migrations
                 {
                     b.HasOne("FacultyApi.DataBase.Group", "Group")
                         .WithMany("Lessons")
-                        .HasForeignKey("GroupId1");
+                        .HasForeignKey("GroupId");
 
                     b.HasOne("FacultyApi.DataBase.Lecturer", "Lecturer")
                         .WithMany("Lessons")
-                        .HasForeignKey("LecturerId1");
+                        .HasForeignKey("LecturerId");
 
                     b.HasOne("FacultyApi.DataBase.Subject", "Subject")
                         .WithMany("Lessons")
-                        .HasForeignKey("SubjectId1");
+                        .HasForeignKey("SubjectId");
 
                     b.Navigation("Group");
 
@@ -214,11 +205,11 @@ namespace DbMigrations.Migrations
                 {
                     b.HasOne("FacultyApi.DataBase.EducationType", "EducationType")
                         .WithMany("Students")
-                        .HasForeignKey("EducationTypeId1");
+                        .HasForeignKey("EducationTypeId");
 
                     b.HasOne("FacultyApi.DataBase.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId1");
+                        .HasForeignKey("GroupId");
 
                     b.Navigation("EducationType");
 
@@ -229,7 +220,7 @@ namespace DbMigrations.Migrations
                 {
                     b.HasOne("FacultyApi.DataBase.Lecturer", "Lecturer")
                         .WithMany("Subjects")
-                        .HasForeignKey("LecturerId1");
+                        .HasForeignKey("LecturerId");
 
                     b.Navigation("Lecturer");
                 });

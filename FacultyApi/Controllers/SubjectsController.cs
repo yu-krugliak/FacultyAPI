@@ -56,8 +56,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"SubjectPost:\n{JsonConvert.SerializeObject(subject)}");
 
-            _SubjectsRepository.Update(subject);
-            return Ok("Subject updated.");
+            try
+            {
+                _SubjectsRepository.Update(subject);
+                return Ok("Subject updated.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut]
@@ -65,8 +72,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"SubjectPut:\n{JsonConvert.SerializeObject(subject)}");
 
-            _SubjectsRepository.Add(subject);
-            return Ok("New subject created.");
+            try
+            {
+                _SubjectsRepository.Add(subject);
+                return Ok("New subject created.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete]

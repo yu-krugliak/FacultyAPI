@@ -38,7 +38,7 @@ namespace FacultyApi.Controllers
         //}
 
         [HttpGet]
-        public IActionResult GetFiltered([FromQuery] int? groupId)
+        public IActionResult GetFiltered([FromQuery] Guid? groupId)
         {
             _logger.LogInformation($"Lessons GetFiltered");
 
@@ -82,9 +82,15 @@ namespace FacultyApi.Controllers
                 DayAndTime = lesson.DayAndTime ?? oldLesson.DayAndTime
             };
 
-            _lessonsRepository.Update(newLesson);
-
-            return Ok("Lesson updated.");
+            try
+            {
+                _lessonsRepository.Update(newLesson);
+                return Ok("Lesson updated.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut]
@@ -101,9 +107,15 @@ namespace FacultyApi.Controllers
                 DayAndTime = lesson.DayAndTime ?? DateTime.MinValue
             };
 
-            _lessonsRepository.Add(newLesson);
-
-            return Ok("New Lesson created.");
+            try
+            {
+                _lessonsRepository.Add(newLesson);
+                return Ok("New Lesson created.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete]

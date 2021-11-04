@@ -81,8 +81,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"LecturerPut:\n{JsonConvert.SerializeObject(lecturer)}");
 
-            _lecturersRepository.Add(lecturer);
-            return Ok("New Lecturer created.");
+            try
+            {
+                _lecturersRepository.Add(lecturer);
+                return Ok("New Lecturer created.");
+            }
+            catch
+            {
+                return BadRequest(); 
+            }
         }
 
 

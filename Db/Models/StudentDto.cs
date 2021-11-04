@@ -33,9 +33,9 @@ namespace FacultyApi.Models
 
         public bool? Expelled { get; set; }
 
-        public int? GroupId { get; set; }
+        public Guid? GroupId { get; set; }
         public string GroupName { get; set; }
-        public int? EducationTypeId { get; set; }
+        public Guid? EducationTypeId { get; set; }
         public string Education { get; set; }
     }
 }

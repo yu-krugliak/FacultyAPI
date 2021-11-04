@@ -9,7 +9,7 @@ namespace FacultyApi.Repository
         void Add(Lesson lesson);
         Lesson Get(Guid id);
         IEnumerable<Lesson> GetAll();
-        IEnumerable<Lesson> GetAllFiltered(int? groupId);
+        IEnumerable<Lesson> GetAllFiltered(Guid? groupId);
 
         void Update(Lesson lesson);
         void Delete(Guid id);

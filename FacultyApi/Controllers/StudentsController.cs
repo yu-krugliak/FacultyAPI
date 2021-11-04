@@ -38,7 +38,7 @@ namespace FacultyApi.Controllers
         //}
 
         [HttpGet]
-        public IActionResult GetFiltered([FromQuery]int? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName)
+        public IActionResult GetFiltered([FromQuery]Guid? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName)
         {
             _logger.LogInformation($"Students GetFiltered");
 
@@ -85,9 +85,15 @@ namespace FacultyApi.Controllers
                 GroupId = student.GroupId ?? oldStudent.GroupId,
             };
 
-            _studentsRepository.Update(newStudent);
-
-            return Ok("Student updated.");
+            try
+            {
+                _studentsRepository.Update(newStudent);
+                return Ok("Student updated.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPut]
@@ -107,9 +113,15 @@ namespace FacultyApi.Controllers
                 GroupId = student.GroupId,
             };
 
-            _studentsRepository.Add(newStudent);
-
-            return Ok("New student created.");
+            try
+            {
+                _studentsRepository.Add(newStudent);
+                return Ok("New student created.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete]

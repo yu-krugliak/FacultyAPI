@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DbMigrations.Migrations
 {
-    public partial class testm2jj : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,27 +56,28 @@ namespace DbMigrations.Migrations
                     SecondName = table.Column<string>(type: "text", nullable: true),
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     MiddleName = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: true),
+                    Name1 = table.Column<string>(type: "text", nullable: true),
+                    Name2 = table.Column<string>(type: "text", nullable: true),
+                    Name3 = table.Column<string>(type: "text", nullable: true),
+                    Name4 = table.Column<string>(type: "text", nullable: true),
                     YearEntry = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: true),
                     Expelled = table.Column<bool>(type: "boolean", nullable: false),
-                    GroupId = table.Column<int>(type: "integer", nullable: true),
-                    GroupId1 = table.Column<Guid>(type: "uuid", nullable: true),
-                    EducationTypeId = table.Column<int>(type: "integer", nullable: true),
-                    EducationTypeId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: true),
+                    EducationTypeId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.StudentId);
                     table.ForeignKey(
-                        name: "FK_Students_EducationTypes_EducationTypeId1",
-                        column: x => x.EducationTypeId1,
+                        name: "FK_Students_EducationTypes_EducationTypeId",
+                        column: x => x.EducationTypeId,
                         principalTable: "EducationTypes",
                         principalColumn: "EducationTypeId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Students_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_Students_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Restrict);
@@ -88,15 +89,14 @@ namespace DbMigrations.Migrations
                 {
                     SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    LecturerId = table.Column<int>(type: "integer", nullable: true),
-                    LecturerId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    LecturerId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Subjects", x => x.SubjectId);
                     table.ForeignKey(
-                        name: "FK_Subjects_Lecturers_LecturerId1",
-                        column: x => x.LecturerId1,
+                        name: "FK_Subjects_Lecturers_LecturerId",
+                        column: x => x.LecturerId,
                         principalTable: "Lecturers",
                         principalColumn: "LecturerId",
                         onDelete: ReferentialAction.Restrict);
@@ -108,66 +108,63 @@ namespace DbMigrations.Migrations
                 {
                     LessonId = table.Column<Guid>(type: "uuid", nullable: false),
                     Semester = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    SubjectId = table.Column<int>(type: "integer", nullable: true),
-                    SubjectId1 = table.Column<Guid>(type: "uuid", nullable: true),
-                    LecturerId = table.Column<int>(type: "integer", nullable: true),
-                    LecturerId1 = table.Column<Guid>(type: "uuid", nullable: true),
-                    GroupId = table.Column<int>(type: "integer", nullable: true),
-                    GroupId1 = table.Column<Guid>(type: "uuid", nullable: true),
+                    SubjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LecturerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    GroupId = table.Column<Guid>(type: "uuid", nullable: true),
                     DayAndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Lessons", x => x.LessonId);
                     table.ForeignKey(
-                        name: "FK_Lessons_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_Lessons_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Lessons_Lecturers_LecturerId1",
-                        column: x => x.LecturerId1,
+                        name: "FK_Lessons_Lecturers_LecturerId",
+                        column: x => x.LecturerId,
                         principalTable: "Lecturers",
                         principalColumn: "LecturerId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Lessons_Subjects_SubjectId1",
-                        column: x => x.SubjectId1,
+                        name: "FK_Lessons_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "SubjectId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_GroupId1",
+                name: "IX_Lessons_GroupId",
                 table: "Lessons",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_LecturerId1",
+                name: "IX_Lessons_LecturerId",
                 table: "Lessons",
-                column: "LecturerId1");
+                column: "LecturerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lessons_SubjectId1",
+                name: "IX_Lessons_SubjectId",
                 table: "Lessons",
-                column: "SubjectId1");
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_EducationTypeId1",
+                name: "IX_Students_EducationTypeId",
                 table: "Students",
-                column: "EducationTypeId1");
+                column: "EducationTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Students_GroupId1",
+                name: "IX_Students_GroupId",
                 table: "Students",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_LecturerId1",
+                name: "IX_Subjects_LecturerId",
                 table: "Subjects",
-                column: "LecturerId1");
+                column: "LecturerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

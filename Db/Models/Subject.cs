@@ -10,7 +10,7 @@ namespace FacultyApi.DataBase
         public Guid SubjectId { get; set; }
         public string Name { get; set; }
 
-        public int? LecturerId { get; set; }
+        public Guid? LecturerId { get; set; }
         public Lecturer Lecturer { get; set; }
 
         public ICollection<Lesson> Lessons { get; set; }

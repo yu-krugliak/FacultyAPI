@@ -58,8 +58,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"EducationTypesPost:\n{JsonConvert.SerializeObject(educationType)}");
 
-            _educationTypesRepository.Update(educationType);
-            return Ok("Education Type updated.");
+            try
+            {
+                _educationTypesRepository.Update(educationType);
+                return Ok("Education Type updated.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
 
@@ -68,8 +75,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"EducationTypePut:\n{JsonConvert.SerializeObject(educationType)}");
 
-            _educationTypesRepository.Add(educationType);
-            return Ok("New education type created.");
+            try
+            {
+                _educationTypesRepository.Add(educationType);
+                return Ok("New education type created.");
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
       
 

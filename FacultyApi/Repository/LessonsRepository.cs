@@ -38,7 +38,7 @@ namespace FacultyApi.Repository
                 .AsNoTracking();
         }
 
-        public IEnumerable<Lesson> GetAllFiltered(int? groupId)
+        public IEnumerable<Lesson> GetAllFiltered(Guid? groupId)
         {
             var lessons = GetAll();
 
