@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FacultyApi.Repository
 {
-    class GroupsRepository : IGroupsRepository
+    public class GroupsRepository : IGroupsRepository
     {
         private readonly Context _context;
 

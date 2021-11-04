@@ -88,7 +88,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _studentsRepository.Update(newStudent);
-                return Ok("Student updated.");
+                return Ok(newStudent);
             }
             catch
             {
@@ -116,7 +116,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _studentsRepository.Add(newStudent);
-                return Ok("New student created.");
+                return Ok(newStudent);
             }
             catch
             {

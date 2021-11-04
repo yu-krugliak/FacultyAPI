@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FacultyApi.Repository
 {
-    class SubjectsRepository : ISubjectsRepository
+    public class SubjectsRepository : ISubjectsRepository
     {
         private readonly Context _context;
 

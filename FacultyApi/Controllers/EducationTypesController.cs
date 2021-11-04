@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FacultyApi.DataBase;
 using FacultyApi.Repository;
@@ -26,12 +27,12 @@ namespace FacultyApi.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync(CancellationToken token = default)
         {
             _logger.LogInformation($"EducationTypesGetAll");
 
-            var education = _educationTypesRepository
-                .GetAll();
+            var education = await _educationTypesRepository
+                .GetAllAsync(token);
 
             return Ok(education);
         }
@@ -39,11 +40,11 @@ namespace FacultyApi.Controllers
 
         [HttpGet()]
         [Route("{id:guid}")]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> GetAsync(Guid id, CancellationToken token = default)
         {
             _logger.LogInformation($"EducationTypesGet, id: {id}");
 
-            var education = _educationTypesRepository.Get(id);
+            var education = await _educationTypesRepository.GetAsync(id, token);
             if (education == null)
             {
                 return NotFound("Education Types not found.");
@@ -54,14 +55,14 @@ namespace FacultyApi.Controllers
 
 
         [HttpPost]
-        public IActionResult Post([FromBody] EducationType educationType)
+        public async Task<IActionResult> UpdateAsync([FromBody] EducationType educationType, CancellationToken token = default)
         {
             _logger.LogInformation($"EducationTypesPost:\n{JsonConvert.SerializeObject(educationType)}");
 
             try
             {
-                _educationTypesRepository.Update(educationType);
-                return Ok("Education Type updated.");
+                await _educationTypesRepository.UpdateAsync(educationType, token);
+                return Ok(educationType);
             }
             catch
             {
@@ -71,14 +72,14 @@ namespace FacultyApi.Controllers
 
 
         [HttpPut]
-        public IActionResult Put([FromBody] EducationType educationType)
+        public async Task<IActionResult> AddAsync([FromBody] EducationType educationType, CancellationToken token = default)
         {
             _logger.LogInformation($"EducationTypePut:\n{JsonConvert.SerializeObject(educationType)}");
 
             try
             {
-                _educationTypesRepository.Add(educationType);
-                return Ok("New education type created.");
+                await _educationTypesRepository.AddAsync(educationType, token);
+                return Ok(educationType);
             }
             catch
             {
@@ -89,11 +90,11 @@ namespace FacultyApi.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken token = default)
         {
             _logger.LogInformation($"EducationTypeDelete, id: {id}");
 
-            _educationTypesRepository.Delete(id);
+            await _educationTypesRepository.DeleteAsync(id, token);
             return Ok("Education type deleted.");
         }
     }

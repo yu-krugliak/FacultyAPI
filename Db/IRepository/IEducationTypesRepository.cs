@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using FacultyApi.DataBase;
 
 namespace FacultyApi.Repository
 {
     public interface IEducationTypesRepository
     {
-        void Add(EducationType educationType);
-        EducationType Get(Guid id);
-        IEnumerable<EducationType> GetAll();
+        Task<EducationType> AddAsync(EducationType educationType, CancellationToken token);
+        Task<EducationType> GetAsync(Guid id, CancellationToken token);
+        Task<List<EducationType>> GetAllAsync(CancellationToken token);
 
-        void Update(EducationType educationTypes);
-        void Delete(Guid id);
+        Task<EducationType> UpdateAsync(EducationType educationTypes, CancellationToken token);
+        Task DeleteAsync(Guid id, CancellationToken token);
 
     }
 }

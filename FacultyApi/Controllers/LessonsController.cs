@@ -85,7 +85,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _lessonsRepository.Update(newLesson);
-                return Ok("Lesson updated.");
+                return Ok(newLesson);
             }
             catch
             {
@@ -110,7 +110,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _lessonsRepository.Add(newLesson);
-                return Ok("New Lesson created.");
+                return Ok(newLesson);
             }
             catch
             {

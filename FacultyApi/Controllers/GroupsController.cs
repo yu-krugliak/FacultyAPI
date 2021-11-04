@@ -58,8 +58,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"GroupPost:\n{JsonConvert.SerializeObject(group)}");
 
-            _groupsRepository.Update(group);
-            return Ok("Group updated.");
+            try
+            {
+                _groupsRepository.Update(group);
+                return Ok(group);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
 
@@ -68,8 +75,15 @@ namespace FacultyApi.Controllers
         {
             _logger.LogInformation($"GroupPut:\n{JsonConvert.SerializeObject(group)}");
 
-            _groupsRepository.Add(group);
-            return Ok("New group created.");
+            try
+            {
+                _groupsRepository.Add(group);
+                return Ok(group);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
 

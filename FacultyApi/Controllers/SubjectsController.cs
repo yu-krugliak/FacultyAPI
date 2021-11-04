@@ -59,7 +59,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _SubjectsRepository.Update(subject);
-                return Ok("Subject updated.");
+                return Ok(subject);
             }
             catch
             {
@@ -75,7 +75,7 @@ namespace FacultyApi.Controllers
             try
             {
                 _SubjectsRepository.Add(subject);
-                return Ok("New subject created.");
+                return Ok(subject);
             }
             catch
             {
