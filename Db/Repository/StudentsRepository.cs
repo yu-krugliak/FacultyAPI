@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FacultyApi.DataBase;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,31 +17,32 @@ namespace FacultyApi.Repository
             _context = context;
         }
 
-        public void Add(Student student)
+        public async Task<Student> AddAsync(Student student, CancellationToken token)
         {
             ///*s*/student.StudentId = null;
 
-            _context.Students.Add(student);
-            _context.SaveChanges();
+            await _context.Students.AddAsync(student, token);
+            await _context.SaveChangesAsync();
+            return student;
         }
 
-        public Student Get(Guid id)
+        public async Task<Student> GetAsync(Guid id, CancellationToken token)
         {
-            return _context.Students
+            return await _context.Students
                 .AsNoTracking()
-                .FirstOrDefault(s => s.StudentId == id);
+                .FirstOrDefaultAsync(s => s.StudentId == id);
         }
 
-        public IEnumerable<Student> GetAll()
+        public async Task<List<Student>> GetAllAsync(CancellationToken token)
         {
-            return _context.Students
+            return await _context.Students
                 .Include(s => s.EducationType)
                 .Include(s => s.Group)
                 .AsNoTracking()
-                .ToList();
+                .ToListAsync(token);
         }
 
-        public IEnumerable<Student> GetAllFiltered(Guid? groupId, bool? expelled, string secondName)
+        public async Task<List<Student>> GetAllFilteredAsync(Guid? groupId, bool? expelled, string secondName, CancellationToken token)
         {
             var students = _context.Students
                 .Include(s => s.EducationType)
@@ -47,30 +50,45 @@ namespace FacultyApi.Repository
                 .AsNoTracking();
 
             if (groupId != null)
-                students = students.Where(s => s.GroupId == groupId);
+                await Task.Run(() => 
+                    students = students.Where(s => s.GroupId == groupId)
+                );
 
             if (expelled != null)
-                students = students.Where(s => s.Expelled == expelled);
+                await Task.Run(() =>
+                    students = students.Where(s => s.Expelled == expelled)
+                );
 
             if (secondName != null)
-                students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()));
+                await Task.Run(() =>
+                    students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()))
+                );
 
-            return students;
+            return await students.ToListAsync(token);
         }
 
-        public void Update(Student student)
+        public async Task<Student> UpdateAsync(Student student, CancellationToken token)
         {
-            _context.Students.Update(student);
-            _context.SaveChanges();
+            await Task.Run(() =>
+                _context.Students.Update(student),
+                token
+            );
+
+            await _context.SaveChangesAsync(token);
+            return student;
         }
 
-        public void Delete(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken token)
         {
             var record = new Student() { StudentId = id };
 
             _context.Students.Attach(record);
-            _context.Students.Remove(record);
-            _context.SaveChanges();
+            await Task.Run(() =>
+                _context.Students.Remove(record),
+                token
+            );
+
+            await _context.SaveChangesAsync(token);
         }
     }
 }

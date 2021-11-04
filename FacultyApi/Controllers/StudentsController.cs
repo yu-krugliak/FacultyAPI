@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using FacultyApi.DataBase;
 using FacultyApi.Models;
@@ -38,24 +39,23 @@ namespace FacultyApi.Controllers
         //}
 
         [HttpGet]
-        public IActionResult GetFiltered([FromQuery]Guid? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName)
+        public async Task<IActionResult> GetFiltered([FromQuery]Guid? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName, CancellationToken token = default)
         {
             _logger.LogInformation($"Students GetFiltered");
 
-            var student = _studentsRepository
-                .GetAllFiltered(groupId, expelled, secondName)
-                .Select(s => new StudentDto(s));
+            var student = await _studentsRepository
+                .GetAllFilteredAsync(groupId, expelled, secondName, token);
 
-            return Ok(student);
+            return Ok(student.Select(s => new StudentDto(s)));
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public IActionResult Get(Guid id)
+        public async Task<IActionResult> GetAsync(Guid id, CancellationToken token = default)
         {
             _logger.LogInformation($"StudentGet, id: {id}");
 
-            var student = _studentsRepository.Get(id);
+            var student = await _studentsRepository.GetAsync(id, token);
             if (student == null)
             {
                 return NotFound("Student not found.");
@@ -65,12 +65,12 @@ namespace FacultyApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] StudentDto student)
+        public async Task<IActionResult> UpdateAsync([FromBody] StudentDto student, CancellationToken token = default)
         {
             _logger.LogInformation($"StudentPost:\n{JsonConvert.SerializeObject(student)}");
 
             var id = student.StudentId; //?? Guid.Empty;
-            var oldStudent = _studentsRepository.Get(id);
+            var oldStudent = await _studentsRepository.GetAsync(id, token);
 
             var newStudent = new Student()
             {
@@ -87,7 +87,7 @@ namespace FacultyApi.Controllers
 
             try
             {
-                _studentsRepository.Update(newStudent);
+                await _studentsRepository.UpdateAsync(newStudent, token);
                 return Ok(newStudent);
             }
             catch
@@ -97,7 +97,7 @@ namespace FacultyApi.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] StudentDto student)
+        public async Task<IActionResult> AddAsync([FromBody] StudentDto student, CancellationToken token = default)
         {
             _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
 
@@ -115,7 +115,7 @@ namespace FacultyApi.Controllers
 
             try
             {
-                _studentsRepository.Add(newStudent);
+                await _studentsRepository.AddAsync(newStudent, token);
                 return Ok(newStudent);
             }
             catch
@@ -126,11 +126,11 @@ namespace FacultyApi.Controllers
 
         [HttpDelete]
         [Route("{id:guid}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken token = default)
         {
             _logger.LogInformation($"StudentDelete, id: {id}");
 
-            _studentsRepository.Delete(id);
+            await _studentsRepository.DeleteAsync(id, token);
             return Ok("Student deleted.");
         }
     }
