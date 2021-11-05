@@ -8,12 +8,12 @@ namespace FacultyApi.Repository
 {
     public interface IEducationTypesRepository
     {
-        Task<EducationType> AddAsync(EducationType educationType, CancellationToken token);
-        Task<EducationType> GetAsync(Guid id, CancellationToken token);
-        Task<List<EducationType>> GetAllAsync(CancellationToken token);
+        Task<EducationType> AddAsync(EducationType educationType, CancellationToken cancellationToken);
+        Task<EducationType> GetAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<EducationType>> GetAllAsync(CancellationToken cancellationToken);
 
-        Task<EducationType> UpdateAsync(EducationType educationTypes, CancellationToken token);
-        Task DeleteAsync(Guid id, CancellationToken token);
+        Task<EducationType> UpdateAsync(EducationType educationTypes, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
     }
 }

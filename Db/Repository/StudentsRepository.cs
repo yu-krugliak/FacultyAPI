@@ -17,32 +17,32 @@ namespace FacultyApi.Repository
             _context = context;
         }
 
-        public async Task<Student> AddAsync(Student student, CancellationToken token)
+        public async Task<Student> AddAsync(Student student, CancellationToken cancellationToken)
         {
             ///*s*/student.StudentId = null;
 
-            await _context.Students.AddAsync(student, token);
+            await _context.Students.AddAsync(student, cancellationToken);
             await _context.SaveChangesAsync();
             return student;
         }
 
-        public async Task<Student> GetAsync(Guid id, CancellationToken token)
+        public async Task<Student> GetAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _context.Students
                 .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.StudentId == id);
         }
 
-        public async Task<List<Student>> GetAllAsync(CancellationToken token)
+        public async Task<List<Student>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _context.Students
                 .Include(s => s.EducationType)
                 .Include(s => s.Group)
                 .AsNoTracking()
-                .ToListAsync(token);
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<List<Student>> GetAllFilteredAsync(Guid? groupId, bool? expelled, string secondName, CancellationToken token)
+        public async Task<List<Student>> GetAllFilteredAsync(Guid? groupId, bool? expelled, string secondName, CancellationToken cancellationToken)
         {
             var students = _context.Students
                 .Include(s => s.EducationType)
@@ -50,7 +50,7 @@ namespace FacultyApi.Repository
                 .AsNoTracking();
 
             if (groupId != null)
-                await Task.Run(() => 
+                await Task.Run(() =>
                     students = students.Where(s => s.GroupId == groupId)
                 );
 
@@ -64,31 +64,23 @@ namespace FacultyApi.Repository
                     students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()))
                 );
 
-            return await students.ToListAsync(token);
+            return await students.ToListAsync(cancellationToken);
         }
 
-        public async Task<Student> UpdateAsync(Student student, CancellationToken token)
+        public async Task<Student> UpdateAsync(Student student, CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
-                _context.Students.Update(student),
-                token
-            );
-
-            await _context.SaveChangesAsync(token);
+            _context.Students.Update(student);
+            await _context.SaveChangesAsync(cancellationToken);
             return student;
         }
 
-        public async Task DeleteAsync(Guid id, CancellationToken token)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var record = new Student() { StudentId = id };
 
             _context.Students.Attach(record);
-            await Task.Run(() =>
-                _context.Students.Remove(record),
-                token
-            );
-
-            await _context.SaveChangesAsync(token);
+            _context.Students.Remove(record);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

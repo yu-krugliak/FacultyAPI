@@ -8,13 +8,13 @@ namespace FacultyApi.Repository
 {
     public interface IStudentsRepository
     {
-        Task<Student> AddAsync(Student student, CancellationToken token);
-        Task<Student> GetAsync(Guid id, CancellationToken token);
-        Task<List<Student>> GetAllAsync(CancellationToken token);
-        Task<List<Student>> GetAllFilteredAsync(Guid? groupId, bool? expelled, string secondName, CancellationToken token);
+        Task<Student> AddAsync(Student student, CancellationToken cancellationToken);
+        Task<Student> GetAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<Student>> GetAllAsync(CancellationToken cancellationToken);
+        Task<List<Student>> GetAllFilteredAsync(Guid? groupId, bool? expelled, string secondName, CancellationToken cancellationToken);
 
-        Task<Student> UpdateAsync(Student student, CancellationToken token);
-        Task DeleteAsync(Guid id, CancellationToken token);
+        Task<Student> UpdateAsync(Student student, CancellationToken cancellationToken);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
     }
 }
