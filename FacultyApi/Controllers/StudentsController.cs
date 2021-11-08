@@ -17,11 +17,13 @@ namespace FacultyApi.Controllers
     {
         private readonly IStudentsRepository _studentsRepository;
         private readonly ILogger<StudentsController> _logger;
+        private readonly IMapper _mapper;
 
-        public StudentsController(IStudentsRepository studentsRepository, ILogger<StudentsController> logger)
+        public StudentsController(IStudentsRepository studentsRepository, ILogger<StudentsController> logger, IMapper mapper)
         {
             _studentsRepository = studentsRepository;
             _logger = logger;
+            _mapper = mapper;
         }
 
         //[HttpGet()]
@@ -49,13 +51,10 @@ namespace FacultyApi.Controllers
                 return NotFound("Student not found.");
             }
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ReadStudentModel>());
-            var studentMapper = config.CreateMapper();
-            var newStudent = studentMapper.Map<List<Student>, List<ReadStudentModel>>(student);
-
+            var newStudent = _mapper.Map<List<ReadStudentModel>>(student);
             return Ok(newStudent);
         }
-
+        //[ApiVersion(1,0)]
         [HttpGet]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken = default)
@@ -68,10 +67,7 @@ namespace FacultyApi.Controllers
                 return NotFound("Student not found.");
             }
 
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ReadStudentModel>());
-            var studentMapper = config.CreateMapper();
-            var newStudent = studentMapper.Map<Student, ReadStudentModel>(student);
-
+            var newStudent = _mapper.Map<ReadStudentModel>(student);
             return Ok(newStudent);
         }
 
@@ -82,12 +78,10 @@ namespace FacultyApi.Controllers
 
             try
             {
-                var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateStudentModel, Student>());
-                var studentMapper = config.CreateMapper();
-                var newStudent = studentMapper.Map<UpdateStudentModel, Student>(student);
-
+                var newStudent = _mapper.Map<Student>(student);
                 await _studentsRepository.UpdateAsync(newStudent, cancellationToken);
-                return Ok(newStudent);
+
+                return Ok(student);
             }
             catch
             {
@@ -102,12 +96,10 @@ namespace FacultyApi.Controllers
 
             try
             {
-                var config = new MapperConfiguration(cfg => cfg.CreateMap<CreateStudentModel, Student>());
-                var studentMapper = config.CreateMapper();
-                var newStudent = studentMapper.Map<CreateStudentModel, Student>(student);
-
+                var newStudent = _mapper.Map<Student>(student);
                 await _studentsRepository.AddAsync(newStudent, cancellationToken);
-                return Ok(newStudent);
+
+                return Ok(student);
             }
             catch
             {

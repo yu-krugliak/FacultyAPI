@@ -50,19 +50,13 @@ namespace FacultyApi.Repository
                 .AsNoTracking();
 
             if (groupId != null)
-                await Task.Run(() =>
-                    students = students.Where(s => s.GroupId == groupId)
-                );
+                students = students.Where(s => s.GroupId == groupId);
 
             if (expelled != null)
-                await Task.Run(() =>
-                    students = students.Where(s => s.Expelled == expelled)
-                );
+                students = students.Where(s => s.Expelled == expelled);
 
             if (secondName != null)
-                await Task.Run(() =>
-                students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()))
-                );
+                students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()));
 
             return await students.ToListAsync(cancellationToken);
         }

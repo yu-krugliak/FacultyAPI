@@ -1,9 +1,6 @@
 using FacultyApi.Controllers;
-using FacultyApi.DataBase;
-using FacultyApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +30,7 @@ namespace FacultyApi
             });
 
             services.AddDbServices(Configuration);
+            services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
         }
 

@@ -17,9 +17,9 @@ namespace FacultyApi.DataBase
         public bool Expelled { get; set; }
 
         public Guid? GroupId { get; set; }
-        public Group Group { get; set; }
+        //public Group Group { get; set; }
 
         public Guid? EducationTypeId { get; set; }
-        public EducationType EducationType { get; set; }
+        //public EducationType EducationType { get; set; }
     }
 }
