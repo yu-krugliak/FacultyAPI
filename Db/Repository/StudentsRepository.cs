@@ -61,7 +61,7 @@ namespace FacultyApi.Repository
 
             if (secondName != null)
                 await Task.Run(() =>
-                    students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()))
+                students = students.Where(s => s.SecondName.ToLower().Contains(secondName.ToLower()))
                 );
 
             return await students.ToListAsync(cancellationToken);

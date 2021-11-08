@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using FacultyApi.DataBase;
-using FacultyApi.Models;
 using FacultyApi.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -39,14 +37,23 @@ namespace FacultyApi.Controllers
         //}
 
         [HttpGet]
-        public async Task<IActionResult> GetFiltered([FromQuery]Guid? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetFiltered([FromQuery] Guid? groupId, [FromQuery] bool? expelled, [FromQuery] string secondName, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"Students GetFiltered");
 
             var student = await _studentsRepository
                 .GetAllFilteredAsync(groupId, expelled, secondName, cancellationToken);
 
-            return Ok(student.Select(s => new StudentDto(s)));
+            if (student.Count == 0)
+            {
+                return NotFound("Student not found.");
+            }
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ReadStudentModel>());
+            var studentMapper = config.CreateMapper();
+            var newStudent = studentMapper.Map<List<Student>, List<ReadStudentModel>>(student);
+
+            return Ok(newStudent);
         }
 
         [HttpGet]
@@ -61,32 +68,24 @@ namespace FacultyApi.Controllers
                 return NotFound("Student not found.");
             }
 
-            return Ok(student);
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Student, ReadStudentModel>());
+            var studentMapper = config.CreateMapper();
+            var newStudent = studentMapper.Map<Student, ReadStudentModel>(student);
+
+            return Ok(newStudent);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateAsync([FromBody] StudentDto student, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateStudentModel student, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"StudentPost:\n{JsonConvert.SerializeObject(student)}");
 
-            var id = student.StudentId; //?? Guid.Empty;
-            var oldStudent = await _studentsRepository.GetAsync(id, cancellationToken);
-
-            var newStudent = new Student()
-            {
-                StudentId = id,
-                FirstName = student.FirstName ?? oldStudent.FirstName,
-                SecondName = student.SecondName ?? oldStudent.SecondName,
-                MiddleName = student.MiddleName ?? oldStudent.MiddleName,
-                YearEntry = student.YearEntry ?? oldStudent.YearEntry,
-                PhoneNumber = student.PhoneNumber ?? oldStudent.PhoneNumber,
-                Expelled = student.Expelled ?? oldStudent.Expelled,
-                EducationTypeId = student.EducationTypeId ?? oldStudent.EducationTypeId,
-                GroupId = student.GroupId ?? oldStudent.GroupId,
-            };
-
             try
             {
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<UpdateStudentModel, Student>());
+                var studentMapper = config.CreateMapper();
+                var newStudent = studentMapper.Map<UpdateStudentModel, Student>(student);
+
                 await _studentsRepository.UpdateAsync(newStudent, cancellationToken);
                 return Ok(newStudent);
             }
@@ -97,24 +96,16 @@ namespace FacultyApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> AddAsync([FromBody] StudentDto student, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> AddAsync([FromBody] CreateStudentModel student, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
 
-            var newStudent = new Student()
-            {
-                FirstName = student.FirstName,
-                SecondName = student.SecondName,
-                MiddleName = student.MiddleName,
-                YearEntry = student.YearEntry ?? DateTime.MinValue,
-                PhoneNumber = student.PhoneNumber,
-                Expelled = student.Expelled ?? false,
-                EducationTypeId = student.EducationTypeId,
-                GroupId = student.GroupId,
-            };
-
             try
             {
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<CreateStudentModel, Student>());
+                var studentMapper = config.CreateMapper();
+                var newStudent = studentMapper.Map<CreateStudentModel, Student>(student);
+
                 await _studentsRepository.AddAsync(newStudent, cancellationToken);
                 return Ok(newStudent);
             }
