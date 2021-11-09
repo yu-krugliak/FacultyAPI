@@ -10,8 +10,6 @@ namespace FacultyApi.Configuration
             CreateMap<CreateEducationModel, EducationType>();
             CreateMap<UpdateEducationModel, EducationType>();
             CreateMap<EducationType, ReadEducationModel>();
-            CreateMap<EducationType, DeleteEducationModel>();
-
         }
     }
 }

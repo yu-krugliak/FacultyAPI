@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using FacultyApi.Attributes;
 using FacultyApi.DataBase;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace FacultyApi.Controllers
+namespace FacultyApi.V2.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[V1]
-    //[ApiRouteAttribute]
+    [ApiVersion("1.0")]
+    [ApiVersion("1.1")]
+    [ApiVersion("2.0")]
 
     public class StudentsController : ControllerBase
     {

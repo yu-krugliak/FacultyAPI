@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FacultyApi.Controllers
+namespace Db.Extensions
 {
     public static class DbExtension
     {
-        public static void AddDbServices(this IServiceCollection services, IConfiguration Configuration)
+        public static IServiceCollection AddDbServices(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<Context>(optionsBuilder =>
@@ -22,6 +22,8 @@ namespace FacultyApi.Controllers
             services.AddScoped<ISubjectsRepository, SubjectsRepository>();
             services.AddScoped<ILecturersRepository, LecturersRepository>();
             services.AddScoped<ILessonsRepository, LessonsRepository>();
+
+            return services;
         }
 
     }

@@ -1,6 +1,8 @@
+using Db.Extensions;
 using FacultyApi.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,9 +31,15 @@ namespace FacultyApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FacultyApi", Version = "v1" });
             });
 
-            services.AddDbServices(Configuration);
-            services.AddAutoMapper(typeof(Startup));
+            services.AddDbServices(Configuration)
+                .AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddApiVersioning(config =>
+            {
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.ReportApiVersions = true;
+            });
         }
 
 

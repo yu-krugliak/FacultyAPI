@@ -5,9 +5,9 @@ namespace FacultyApi.DataBase
 {
     public class CreateStudentModel
     {
-        public string SecondName { get; set; }
-        public string FirstName { get; set; }
-        public string MiddleName { get; set; }
+        public string FamilienName { get; set; }
+        public string Name { get; set; }
+        public string MidName { get; set; }
 
         public DateTime YearEntry { get; set; }
         public string PhoneNumber { get; set; }
