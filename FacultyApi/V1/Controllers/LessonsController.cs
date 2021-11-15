@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using FacultyApi.Attributes;
+
 
 namespace FacultyApi.V1.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V1, ApiRouteAttribute]
     [ApiController]
     public class LessonsController : ControllerBase
     {
@@ -64,7 +66,7 @@ namespace FacultyApi.V1.Controllers
             return Ok(lesson);
         }
 
-        [HttpPost]
+        [HttpPut]
         public IActionResult Post([FromBody] LessonDto lesson)
         {
             _logger.LogInformation($"LessonPost:\n{JsonConvert.SerializeObject(lesson)}");
@@ -91,41 +93,6 @@ namespace FacultyApi.V1.Controllers
             {
                 return BadRequest();
             }
-        }
-
-        [HttpPut]
-        public IActionResult Put([FromBody] LessonDto lesson)
-        {
-            _logger.LogInformation($"LessonPut:\n{JsonConvert.SerializeObject(lesson)}");
-
-            var newLesson = new Lesson()
-            {
-                Semester = lesson.Semester ?? DateTime.MinValue,
-                SubjectId = lesson.SubjectId,
-                LecturerId = lesson.LecturerId,
-                GroupId = lesson.GroupId,
-                DayAndTime = lesson.DayAndTime ?? DateTime.MinValue
-            };
-
-            try
-            {
-                _lessonsRepository.Add(newLesson);
-                return Ok(newLesson);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _logger.LogInformation($"LessonDelete, id: {id}");
-
-            _lessonsRepository.Delete(id);
-            return Ok("Lesson deleted.");
         }
     }
 }

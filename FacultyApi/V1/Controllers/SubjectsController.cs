@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using FacultyApi.Attributes;
+
 
 namespace FacultyApi.V1.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V1, ApiRouteAttribute]
     [ApiController]
     public class SubjectsController : ControllerBase
     {
@@ -51,7 +53,7 @@ namespace FacultyApi.V1.Controllers
             return Ok(subject);
         }
 
-        [HttpPost]
+        [HttpPut]
         public IActionResult Post([FromBody] Subject subject)
         {
             _logger.LogInformation($"SubjectPost:\n{JsonConvert.SerializeObject(subject)}");
@@ -65,32 +67,6 @@ namespace FacultyApi.V1.Controllers
             {
                 return BadRequest();
             }
-        }
-
-        [HttpPut]
-        public IActionResult Put([FromBody] Subject subject)
-        {
-            _logger.LogInformation($"SubjectPut:\n{JsonConvert.SerializeObject(subject)}");
-
-            try
-            {
-                _SubjectsRepository.Add(subject);
-                return Ok(subject);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _logger.LogInformation($"SubjectDelete, id: {id}");
-
-            _SubjectsRepository.Delete(id);
-            return Ok("Subject deleted.");
         }
     }
 }

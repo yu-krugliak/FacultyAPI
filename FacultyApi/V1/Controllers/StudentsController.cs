@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FacultyApi.Attributes;
 using FacultyApi.DataBase;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -11,12 +12,9 @@ using Newtonsoft.Json;
 
 namespace FacultyApi.V1.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
-    [ApiVersion("1.0")]
-    [ApiVersion("1.1")]
-    [ApiVersion("2.0")]
-
+    [Attributes.V1, ApiRouteAttribute]
+   
     public class StudentsController : ControllerBase
     {
         private readonly IStudentsRepository _studentsRepository;
@@ -75,7 +73,7 @@ namespace FacultyApi.V1.Controllers
             return Ok(newStudent);
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateStudentModel student, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"StudentPost:\n{JsonConvert.SerializeObject(student)}");
@@ -91,34 +89,6 @@ namespace FacultyApi.V1.Controllers
             {
                 return BadRequest();
             }
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> AddAsync([FromBody] CreateStudentModel student, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
-
-            try
-            {
-                var newStudent = _mapper.Map<Student>(student);
-                await _studentsRepository.AddAsync(newStudent, cancellationToken);
-
-                return Ok(student);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"StudentDelete, id: {id}");
-
-            await _studentsRepository.DeleteAsync(id, cancellationToken);
-            return Ok("Student deleted.");
         }
     }
 }

@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using FacultyApi.Attributes;
+
 
 namespace FacultyApi.V2.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V2, ApiRouteAttribute]
     [ApiController]
     public class SubjectsController : ControllerBase
     {
@@ -24,50 +26,8 @@ namespace FacultyApi.V2.Controllers
             _logger = logger;
         }
 
-        [HttpGet()]
-        public IActionResult GetAll()
-        {
-            _logger.LogInformation($"SubjectsGetAll");
-
-            var subject = _SubjectsRepository
-                .GetAll();
-
-            return Ok(subject);
-        }
-
-
-        [HttpGet()]
-        [Route("{id:guid}")]
-        public IActionResult Get(Guid id)
-        {
-            _logger.LogInformation($"SubjectGet, id: {id}");
-
-            var subject = _SubjectsRepository.Get(id);
-            if (subject == null)
-            {
-                return NotFound("Subject not found.");
-            }
-
-            return Ok(subject);
-        }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Subject subject)
-        {
-            _logger.LogInformation($"SubjectPost:\n{JsonConvert.SerializeObject(subject)}");
-
-            try
-            {
-                _SubjectsRepository.Update(subject);
-                return Ok(subject);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpPut]
         public IActionResult Put([FromBody] Subject subject)
         {
             _logger.LogInformation($"SubjectPut:\n{JsonConvert.SerializeObject(subject)}");

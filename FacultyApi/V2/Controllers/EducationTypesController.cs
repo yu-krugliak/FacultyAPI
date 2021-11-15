@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FacultyApi.Attributes;
 using FacultyApi.DataBase;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace FacultyApi.V2.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V2, ApiRouteAttribute]
     [ApiController]
     public class EducationTypesController : ControllerBase
     {
@@ -25,62 +26,7 @@ namespace FacultyApi.V2.Controllers
             _mapper = mapper;
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"EducationTypesGetAll");
-
-            var education = await _educationTypesRepository
-                .GetAllAsync(cancellationToken);
-
-            if (education.Count == 0)
-            {
-                return NotFound("Education types not found.");
-            }
-
-            var newEducation = _mapper.Map<List<ReadEducationModel>>(education);
-            return Ok(newEducation);
-        }
-
-
-        [HttpGet()]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> GetAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"EducationTypesGet, id: {id}");
-
-            var education = await _educationTypesRepository.GetAsync(id, cancellationToken);
-            if (education == null)
-            {
-                return NotFound("Education Types not found.");
-            }
-
-            var newEducation = _mapper.Map<ReadEducationModel>(education);
-            return Ok(newEducation);
-        }
-
-
         [HttpPost]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationModel educationType, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"EducationTypesPost:\n{JsonConvert.SerializeObject(educationType)}");
-
-            try
-            {
-                var newEducation = _mapper.Map<EducationType>(educationType);
-                await _educationTypesRepository.UpdateAsync(newEducation, cancellationToken);
-
-                return Ok(educationType);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-
-        [HttpPut]
         public async Task<IActionResult> AddAsync([FromBody] CreateEducationModel educationType, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"EducationTypePut:\n{JsonConvert.SerializeObject(educationType)}");

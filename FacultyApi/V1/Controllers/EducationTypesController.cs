@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FacultyApi.Attributes;
 using FacultyApi.DataBase;
 using FacultyApi.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace FacultyApi.V1.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V1, ApiRouteAttribute]
     [ApiController]
     public class EducationTypesController : ControllerBase
     {
@@ -61,7 +62,7 @@ namespace FacultyApi.V1.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UpdateEducationModel educationType, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation($"EducationTypesPost:\n{JsonConvert.SerializeObject(educationType)}");
@@ -79,34 +80,5 @@ namespace FacultyApi.V1.Controllers
             }
         }
 
-
-        [HttpPut]
-        public async Task<IActionResult> AddAsync([FromBody] CreateEducationModel educationType, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"EducationTypePut:\n{JsonConvert.SerializeObject(educationType)}");
-
-            try
-            {
-                var newEducation = _mapper.Map<EducationType>(educationType);
-                await _educationTypesRepository.AddAsync(newEducation, cancellationToken);
-
-                return Ok(educationType);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            _logger.LogInformation($"EducationTypeDelete, id: {id}");
-
-            await _educationTypesRepository.DeleteAsync(id, cancellationToken);
-            return Ok("Education type deleted.");
-        }
     }
 }

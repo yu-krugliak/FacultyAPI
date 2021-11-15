@@ -1,14 +1,19 @@
 using Db.Extensions;
-using FacultyApi.Controllers;
+using FacultyApi.V1;
+using FacultyApi.V2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
-
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Linq;
 
 namespace FacultyApi
 {
@@ -26,32 +31,58 @@ namespace FacultyApi
         {
             services.AddMvc();
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FacultyApi", Version = "v1" });
-            });
-
             services.AddDbServices(Configuration)
                 .AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            services.AddApiVersioning(config =>
+
+            services.AddApiVersioning(o => { o.ReportApiVersions = true; })
+                .AddVersionedApiExplorer(options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
+            services.AddSwaggerGen(option =>
             {
-                config.DefaultApiVersion = new ApiVersion(1, 0);
-                config.AssumeDefaultVersionWhenUnspecified = true;
-                config.ReportApiVersions = true;
+                option.SwaggerDoc("v2", new OpenApiInfo()
+                {
+                    Title = "V2",
+                    Version = "v2"
+                });
+                option.SwaggerDoc("v1", new OpenApiInfo()
+                {
+                    Title = "V1",
+                    Version = "v1"
+                });
             });
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiDescriptionProvider)
         {
+
             if (env.IsDevelopment())
             {
+
+
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    // build a swagger endpoint for each discovered API version
+                    foreach (var description in apiDescriptionProvider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    }
+                    app.Map($"/swagger/versions_info", builder => builder.Run(async context =>
+                        await context.Response.WriteAsync(
+                            string.Join(Environment.NewLine, options.ConfigObject.Urls.Select(
+                                descriptor => $"{descriptor.Name} {descriptor.Url}"))).ConfigureAwait(false)));
+                    options.DocExpansion(DocExpansion.List);
+                });
             }
 
-            //app.UseHttpsRedirection();
+                     //app.UseHttpsRedirection();
 
             app.UseSerilogRequestLogging();
 
@@ -73,6 +104,8 @@ namespace FacultyApi
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }

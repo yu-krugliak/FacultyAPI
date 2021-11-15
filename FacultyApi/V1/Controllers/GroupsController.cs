@@ -9,10 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using FacultyApi.Attributes;
+
 
 namespace FacultyApi.V1.Controllers
 {
-    [Route("[controller]")]
+    [Attributes.V1, ApiRouteAttribute]
     [ApiController]
     public class GroupsController : ControllerBase
     {
@@ -53,7 +55,7 @@ namespace FacultyApi.V1.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPut]
         public IActionResult Post([FromBody] Group group)
         {
             _logger.LogInformation($"GroupPost:\n{JsonConvert.SerializeObject(group)}");
@@ -67,34 +69,6 @@ namespace FacultyApi.V1.Controllers
             {
                 return BadRequest();
             }
-        }
-
-
-        [HttpPut]
-        public IActionResult Put([FromBody] Group group)
-        {
-            _logger.LogInformation($"GroupPut:\n{JsonConvert.SerializeObject(group)}");
-
-            try
-            {
-                _groupsRepository.Add(group);
-                return Ok(group);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-
-        [HttpDelete]
-        [Route("{id:guid}")]
-        public IActionResult Delete(Guid id)
-        {
-            _logger.LogInformation($"GroupDelete, id: {id}");
-
-            _groupsRepository.Delete(id);
-            return Ok("Group deleted.");
         }
 
     }
