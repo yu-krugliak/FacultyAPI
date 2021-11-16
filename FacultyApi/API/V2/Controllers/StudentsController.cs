@@ -33,7 +33,7 @@ namespace FacultyApi.API.V2.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] CreateStudentModel student, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
+            //_logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
 
             try
             {
@@ -42,9 +42,10 @@ namespace FacultyApi.API.V2.Controllers
 
                 return Ok(student);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                _logger.Log(LogLevel.Error, ex.Message);
+                return BadRequest(ex);
             }
         }
 
