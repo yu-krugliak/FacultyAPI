@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using FacultyApi.DataBase;
+using Db.IRepository;
+using Db.Models;
+using Db.Models.EducationTypes;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApi.Repository
+namespace Db.Repository
 {
     public class EducationTypesRepository : IEducationTypesRepository
     {
@@ -22,7 +24,7 @@ namespace FacultyApi.Repository
         public async Task<EducationType> AddAsync(EducationType educationType, CancellationToken cancellationToken)
         {
             //educationType.EducationTypeId = null;
-            
+
             await _context.EducationTypes.AddAsync(educationType, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
             return educationType;
@@ -35,7 +37,7 @@ namespace FacultyApi.Repository
 
         public async Task<List<EducationType>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _context.EducationTypes                   
+            return await _context.EducationTypes
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
         }
@@ -56,7 +58,7 @@ namespace FacultyApi.Repository
             var record = new EducationType() { EducationTypeId = id };  ///TODO
 
             _context.EducationTypes.Attach(record);
-             
+
             await Task.Run(() =>
                 _context.EducationTypes.Remove(record),
                 cancellationToken

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FacultyApi.DataBase;
+using Db.IRepository;
+using Db.Models;
+using Db.Models.Basic;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApi.Repository
+namespace Db.Repository
 {
     public class LessonsRepository : ILessonsRepository
     {

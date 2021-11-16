@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FacultyApi.DataBase;
+using Db.Models.Basic;
 
-namespace FacultyApi.Repository
+namespace Db.IRepository
 {
     public interface ISubjectsRepository
     {

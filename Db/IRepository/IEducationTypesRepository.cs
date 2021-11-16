@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using FacultyApi.DataBase;
+using Db.Models.EducationTypes;
 
-namespace FacultyApi.Repository
+namespace Db.IRepository
 {
     public interface IEducationTypesRepository
     {

@@ -1,7 +1,10 @@
 ﻿using System;
+using Db.Models.Basic;
+using Db.Models.EducationTypes;
+using Db.Models.Students;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApi.DataBase
+namespace Db.Models
 {
     public class Context : DbContext
     {

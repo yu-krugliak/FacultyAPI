@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FacultyApi.DataBase;
+using Db.Models.Students;
 
 namespace FacultyApi.Configuration
 {

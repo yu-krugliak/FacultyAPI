@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using FacultyApi.DataBase;
+using Db.IRepository;
+using Db.Models;
+using Db.Models.Basic;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApi.Repository
+namespace Db.Repository
 {
     public class GroupsRepository : IGroupsRepository
     {
@@ -19,7 +21,7 @@ namespace FacultyApi.Repository
 
         public void Add(Group group)
         {
-            
+
             _context.Groups.Add(group);
             _context.SaveChanges();
         }
@@ -31,7 +33,7 @@ namespace FacultyApi.Repository
 
         public IEnumerable<Group> GetAll()
         {
-            return _context.Groups                   
+            return _context.Groups
                 .AsNoTracking()
                 .ToList();
         }
@@ -44,7 +46,7 @@ namespace FacultyApi.Repository
 
         public void Delete(Guid id)
         {
-            var record = new Group() { GroupId = id }; 
+            var record = new Group() { GroupId = id };
 
             _context.Groups.Attach(record);
             _context.Groups.Remove(record);

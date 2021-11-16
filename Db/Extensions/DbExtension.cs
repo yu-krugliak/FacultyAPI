@@ -1,5 +1,6 @@
-﻿using FacultyApi.DataBase;
-using FacultyApi.Repository;
+﻿using Db.IRepository;
+using Db.Models;
+using Db.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

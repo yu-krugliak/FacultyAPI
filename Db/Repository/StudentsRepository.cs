@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FacultyApi.DataBase;
+using Db.IRepository;
+using Db.Models;
+using Db.Models.Students;
 using Microsoft.EntityFrameworkCore;
 
-namespace FacultyApi.Repository
+namespace Db.Repository
 {
     public class StudentsRepository : IStudentsRepository
     {

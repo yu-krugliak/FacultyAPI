@@ -1,6 +1,4 @@
 using Db.Extensions;
-using FacultyApi.V1;
-using FacultyApi.V2;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
