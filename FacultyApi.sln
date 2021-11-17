@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Db", "Db\Db.csproj", "{465F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbMigrations", "DbMigrations\DbMigrations.csproj", "{7B35A158-2148-4348-90CF-0B581049B816}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestController", "UnitTestController\UnitTestController.csproj", "{881D6990-4E47-480E-B933-86F5FD793C72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTestController", "UnitTestController\UnitTestController.csproj", "{881D6990-4E47-480E-B933-86F5FD793C72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat", "Chat\Chat.csproj", "{EEA0A833-187E-430F-A7EC-CB95D85765F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{881D6990-4E47-480E-B933-86F5FD793C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{881D6990-4E47-480E-B933-86F5FD793C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{881D6990-4E47-480E-B933-86F5FD793C72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEA0A833-187E-430F-A7EC-CB95D85765F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEA0A833-187E-430F-A7EC-CB95D85765F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEA0A833-187E-430F-A7EC-CB95D85765F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEA0A833-187E-430F-A7EC-CB95D85765F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,12 +3,14 @@ using Db.IRepository;
 using Db.Models.Students;
 using FacultyApi.API.V2.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Moq;
 using System;
+using System.Reflection;
 using System.Threading;
 using Xunit;
 using FluentAssertions;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace UnitTestController
 {
@@ -30,6 +32,10 @@ namespace UnitTestController
 
             _cancellationToken = new CancellationTokenSource().Token;
             _logger = new Mock<ILogger<StudentsController>>();
+            this._logger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>()))
+                .Returns(true)
+                .Callback(() => this._logger.Verify(logger => logger.IsEnabled(It.IsAny<LogLevel>())));
+
             _studentsController = new StudentsController(_studentsRepositoryMock.Object, _logger.Object, _mapperMock.Object);
 
         }
@@ -75,6 +81,7 @@ namespace UnitTestController
             _studentsRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Student>(), It.IsAny<CancellationToken>()))
                 .Throws(ex);
 
+   
             var student = new CreateStudentModel()
             {
                 FamilienName = "www"
@@ -94,11 +101,28 @@ namespace UnitTestController
 
             Assert.Equal(ex.Message, exception.Message);
 
+            var str = $"StudentPut:\n{JsonConvert.SerializeObject(student)}";
 
-           // this._logger.Verify(s => s.Log(It.IsAny<LogLevel>(), It.IsAny<string>()), Times.Once);
+
             this._mapperMock.Verify(m => m.Map<Student>(student), Times.Once);
             this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Once);
 
+
+            _logger.Verify(x => x.Log(LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                null,
+                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
+            _logger.Verify(x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    ex,
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                Times.Once);
+
+
+            this._logger.VerifyNoOtherCalls();
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
@@ -125,6 +149,12 @@ namespace UnitTestController
 
             this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
             this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Once);
+
+            _logger.Verify(x => x.Log(LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                null,
+                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
 
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();

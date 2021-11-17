@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -33,7 +34,7 @@ namespace FacultyApi.API.V2.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAsync([FromBody] CreateStudentModel student, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation($"StudentPut:\n{JsonConvert.SerializeObject(student)}");
+            _logger.Log(LogLevel.Information, /*null*/ $"Message");
 
             try
             {
@@ -44,6 +45,7 @@ namespace FacultyApi.API.V2.Controllers
             }
             catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, ex, ex.Message);
                 return BadRequest(ex);
             }
         }
