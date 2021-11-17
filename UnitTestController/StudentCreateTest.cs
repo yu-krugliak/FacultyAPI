@@ -39,8 +39,8 @@ namespace UnitTestController
         {
             //Arrange
             var ex = new Exception("Message_error");
-            _mapperMock.Setup(maper => maper.Map<Student>(It.IsAny<CreateStudentModel>()))
-               .Throws(ex);//Returns(new Student());
+            _mapperMock.Setup(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()))
+               .Throws(ex);
 
             var student = new CreateStudentModel()
             {
@@ -51,15 +51,17 @@ namespace UnitTestController
             var result = await _studentsController.AddAsync(student, _cancellationToken);
 
             //Assert
-            //Assert.AreEqual("request can not be null", response.Message);
-            //Assert.Equal(_logger.Object, ex);
-            //result.Should().BeOfType<BadRequestObjectResult>();
-            //Assert.Equal(ex.Message, _logger.Object.ToString());
-
             Assert.IsType<BadRequestObjectResult>(result);
-            //_logger.Object
+            Assert.NotNull(result);
 
-            this._logger.VerifyNoOtherCalls();
+            var objectResult = (BadRequestObjectResult)result;
+            var exception = (Exception)objectResult.Value;
+
+            Assert.Equal(ex.Message, exception.Message);
+
+            this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
+            this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Exactly(0));
+
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
@@ -70,27 +72,33 @@ namespace UnitTestController
         {
             //Arrange
             var ex = new Exception("Message_error");
-            _mapperMock.Setup(maper => maper.Map<Student>(It.IsAny<CreateStudentModel>()))
-               .Throws(ex);//Returns(new Student());
+            _studentsRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Student>(), It.IsAny<CancellationToken>()))
+                .Throws(ex);
 
             var student = new CreateStudentModel()
             {
                 FamilienName = "www"
             };
 
+
             //Act
             var result = await _studentsController.AddAsync(student, _cancellationToken);
 
+
             //Assert
-            //Assert.AreEqual("request can not be null", response.Message);
-            //Assert.Equal(_logger.Object, ex);
-            //result.Should().BeOfType<BadRequestObjectResult>();
-            //Assert.Equal(ex.Message, _logger.Object.ToString());
-
             Assert.IsType<BadRequestObjectResult>(result);
-            //_logger.Object
+            Assert.NotNull(result);
 
-            this._logger.VerifyNoOtherCalls();
+            var objectResult = (BadRequestObjectResult)result;
+            var exception = (Exception)objectResult.Value;
+
+            Assert.Equal(ex.Message, exception.Message);
+
+
+           // this._logger.Verify(s => s.Log(It.IsAny<LogLevel>(), It.IsAny<string>()), Times.Once);
+            this._mapperMock.Verify(m => m.Map<Student>(student), Times.Once);
+            this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Once);
+
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
@@ -100,7 +108,6 @@ namespace UnitTestController
         public async void CreateStudentSuccessful_OkResult()
         {
             //Arrange
-            //
             var student = new CreateStudentModel()
             {
                 FamilienName = "www"
@@ -114,18 +121,13 @@ namespace UnitTestController
             var result = await _studentsController.AddAsync(student, _cancellationToken);
 
             //Assert
-            //Assert.AreEqual("request can not be null", response.Message);
-            //Assert.Equal(_logger.Object, ex);
-            //result.Should().BeOfType<BadRequestObjectResult>();
-            //Assert.Equal(ex.Message, _logger.Object.ToString());
-
             Assert.IsType<OkObjectResult>(result);
-            //_logger.Object
-            this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
 
-            this._logger.VerifyNoOtherCalls();
+            this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
+            this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Once);
+
             this._mapperMock.VerifyNoOtherCalls();
-            //this._studentsRepositoryMock.VerifyNoOtherCalls();
+            this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
 
     }
