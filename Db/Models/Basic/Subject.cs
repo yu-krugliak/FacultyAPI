@@ -13,6 +13,6 @@ namespace Db.Models.Basic
         public Guid? LecturerId { get; set; }
         public Lecturer Lecturer { get; set; }
 
-        public ICollection<Lesson> Lessons { get; set; }
+        public ICollection<UserService> Lessons { get; set; }
     }
 }

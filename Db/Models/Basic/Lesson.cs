@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Db.Models.Basic
 {
-    public class Lesson
+    public class UserService
     {
         [Key]
         public Guid LessonId { get; set; }

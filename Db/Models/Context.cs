@@ -10,7 +10,7 @@ namespace Db.Models
     {
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<Lecturer> Lecturers { get; set; }
-        public virtual DbSet<Lesson> Lessons { get; set; }
+        public virtual DbSet<UserService> Lessons { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Subject> Subjects { get; set; }
         public virtual DbSet<EducationType> EducationTypes { get; set; }
@@ -104,7 +104,7 @@ namespace Db.Models
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
-            modelBuilder.Entity<Lesson>(entity =>
+            modelBuilder.Entity<UserService>(entity =>
             {
                 entity.ToTable("Lessons");
                 entity.HasKey(lesson => lesson.LessonId);

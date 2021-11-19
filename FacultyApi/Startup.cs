@@ -12,6 +12,8 @@ using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 
 namespace FacultyApi
 {
@@ -52,6 +54,12 @@ namespace FacultyApi
                     Version = "v1"
                 });
             });
+
+            services
+                .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+                .AddNegotiate();
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
         }
 
 
@@ -104,6 +112,10 @@ namespace FacultyApi
             });
 
 
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
         }
     }
 }

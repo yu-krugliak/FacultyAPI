@@ -31,7 +31,7 @@ namespace FacultyApi.API.V2.Controllers
         {
             _logger.LogInformation($"LessonPut:\n{JsonConvert.SerializeObject(lesson)}");
 
-            var newLesson = new Lesson()
+            var newLesson = new UserService()
             {
                 Semester = lesson.Semester ?? DateTime.MinValue,
                 SubjectId = lesson.SubjectId,

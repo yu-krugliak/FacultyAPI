@@ -6,7 +6,7 @@ namespace Db.Models.Basic
     {
         public LessonDto() { }
 
-        public LessonDto(Lesson lesson)
+        public LessonDto(UserService lesson)
         {
             LessonId = lesson.LessonId;
             Semester = lesson.Semester;

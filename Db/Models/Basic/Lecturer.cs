@@ -19,7 +19,7 @@ namespace Db.Models.Basic
         public string PhoneNumber { get; set; }
 
         public ICollection<Subject> Subjects { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
+        public ICollection<UserService> Lessons { get; set; }
 
     }
 }

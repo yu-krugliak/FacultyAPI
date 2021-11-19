@@ -12,7 +12,7 @@ namespace Db.Models.Basic
         public string Name { get; set; }
 
         public ICollection<Student> Students { get; set; }
-        public ICollection<Lesson> Lessons { get; set; }
+        public ICollection<UserService> Lessons { get; set; }
 
     }
 }

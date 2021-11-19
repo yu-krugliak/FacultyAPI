@@ -17,21 +17,21 @@ namespace Db.Repository
             _context = context;
         }
 
-        public void Add(Lesson lesson)
+        public void Add(UserService lesson)
         {
 
             _context.Lessons.Add(lesson);
             _context.SaveChanges();
         }
 
-        public Lesson Get(Guid id)
+        public UserService Get(Guid id)
         {
             return _context.Lessons
                 .AsNoTracking()
                 .FirstOrDefault(s => s.LessonId == id);
         }
 
-        public IEnumerable<Lesson> GetAll()
+        public IEnumerable<UserService> GetAll()
         {
             return _context.Lessons
                 .Include(s => s.Lecturer)
@@ -40,7 +40,7 @@ namespace Db.Repository
                 .AsNoTracking();
         }
 
-        public IEnumerable<Lesson> GetAllFiltered(Guid? groupId)
+        public IEnumerable<UserService> GetAllFiltered(Guid? groupId)
         {
             var lessons = GetAll();
 
@@ -49,7 +49,7 @@ namespace Db.Repository
 
             return lessons;
         }
-        public void Update(Lesson lesson)
+        public void Update(UserService lesson)
         {
             _context.Lessons.Update(lesson);
             _context.SaveChanges();
@@ -57,7 +57,7 @@ namespace Db.Repository
 
         public void Delete(Guid id)
         {
-            var record = new Lesson() { LessonId = id };
+            var record = new UserService() { LessonId = id };
 
             _context.Lessons.Attach(record);
             _context.Lessons.Remove(record);

@@ -72,7 +72,7 @@ namespace FacultyApi.API.V1.Controllers
             var id = lesson.LessonId;
             var oldLesson = _lessonsRepository.Get(id);
 
-            var newLesson = new Lesson()
+            var newLesson = new UserService()
             {
                 LessonId = id,
                 Semester = lesson.Semester ?? oldLesson.Semester,
