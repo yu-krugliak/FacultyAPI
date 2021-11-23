@@ -1,6 +1,6 @@
 ﻿namespace FacultyApi
 {
-    public class AppSettings
+    public class AuthOptions
     {
         public string Secret { get; set; }
     }

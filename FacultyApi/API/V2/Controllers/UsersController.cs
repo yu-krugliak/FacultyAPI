@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Db.Auth;
 using Db.IRepository;
 using Db.Models.Students;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +11,7 @@ using FacultyApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using FacultyApi.Auth;
 
 namespace FacultyApi.API.V2.Controllers
 {

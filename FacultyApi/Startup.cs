@@ -12,6 +12,7 @@ using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Linq;
+using FacultyApi.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 
@@ -34,6 +35,8 @@ namespace FacultyApi
             services.AddDbServices(Configuration)
                 .AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddTransient<IUserService, UserService>();
+
 
             services.AddApiVersioning(o => { o.ReportApiVersions = true; })
                 .AddVersionedApiExplorer(options =>
@@ -59,7 +62,7 @@ namespace FacultyApi
                 .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
                 .AddNegotiate();
 
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<AuthOptions>(Configuration.GetSection("AppSettings"));
         }
 
 

@@ -6,12 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Db.IRepository;
 using Db.Models;
-using Db.Models.Auth;
 using Db.Models.Students;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Db.Auth
+namespace FacultyApi.Auth
 {
     public class UserService : IUserService
     {

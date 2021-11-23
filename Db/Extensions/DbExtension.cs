@@ -1,5 +1,4 @@
-﻿using Db.Auth;
-using Db.IRepository;
+﻿using Db.IRepository;
 using Db.Models;
 using Db.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +23,6 @@ namespace Db.Extensions
             services.AddScoped<ISubjectsRepository, SubjectsRepository>();
             services.AddScoped<ILecturersRepository, LecturersRepository>();
             services.AddScoped<ILessonsRepository, LessonsRepository>();
-            services.AddTransient<IUserService, UserService>();
 
             return services;
         }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Db.Auth
+namespace FacultyApi.Auth
 {
     public class AuthOptions
     {

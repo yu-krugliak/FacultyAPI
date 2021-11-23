@@ -1,7 +1,6 @@
-﻿using Db.Models.Auth;
-using System;
+﻿using System;
 
-namespace Db.Auth
+namespace FacultyApi.Auth
 {
     public class AuthenticateResponse
     {

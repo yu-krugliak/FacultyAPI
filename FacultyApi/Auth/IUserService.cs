@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Db.Auth;
-using Db.Models.Auth;
 using Db.Models.Students;
+using FacultyApi.Auth;
 
-namespace Db.IRepository
+namespace FacultyApi.Auth
 {
     public interface IUserService
     {

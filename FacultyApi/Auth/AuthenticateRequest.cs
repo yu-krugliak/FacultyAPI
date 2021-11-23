@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Db.Auth
+namespace FacultyApi.Auth
 {
     public class AuthenticateRequest
     {

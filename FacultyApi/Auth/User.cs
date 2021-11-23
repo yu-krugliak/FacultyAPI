@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Db.Models.Auth
+namespace FacultyApi.Auth
 {
     public class User
     {
