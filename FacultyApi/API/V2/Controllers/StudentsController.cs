@@ -39,7 +39,11 @@ namespace FacultyApi.API.V2.Controllers
             try
             {
                 var newStudent = _mapper.Map<Student>(student);
-                await _studentsRepository.AddAsync(newStudent, cancellationToken);
+                var result = await _studentsRepository.AddAsync(newStudent, cancellationToken);
+                if (result == null)
+                {
+                    throw new ArgumentNullException(nameof(result));
+                }
 
                 return Ok(student);
             }

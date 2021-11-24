@@ -41,17 +41,15 @@ namespace UnitTestController
         }
 
         [Fact]
-        public async void WhenCantMapShouldThrowException_BadRequestResult()
+        public async void AddAsync_ThrowsException_BadRequestResult()
         {
             //Arrange
-            var ex = new Exception("Message_error");
-            _mapperMock.Setup(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()))
-               .Throws(ex);
+            var exception = new Exception("Message_error"); 
 
-            var student = new CreateStudentModel()
-            {
-                FamilienName = "www"
-            };
+            _mapperMock.Setup(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()))
+               .Throws(exception);
+
+            var student = new CreateStudentModel() { FamilienName = "www" };
 
             //Act
             var result = await _studentsController.AddAsync(student, _cancellationToken);
@@ -61,12 +59,12 @@ namespace UnitTestController
             Assert.NotNull(result);
 
             var objectResult = (BadRequestObjectResult)result;
-            var exception = (Exception)objectResult.Value;
+            var resultException = (Exception)objectResult.Value;
 
-            Assert.Equal(ex.Message, exception.Message);
+            Assert.Equal(exception.Message, resultException.Message);
 
             this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
-            this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Exactly(0));
+            this._studentsRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Exactly(0));
 
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
@@ -74,19 +72,15 @@ namespace UnitTestController
 
 
         [Fact]
-        public async void WhenCantAddAsyncShouldThrowException_BadRequestResult()
+        public async void AddAsync_NullResult_BadRequestResult()
         {
             //Arrange
-            var ex = new Exception("Message_error");
+            var ex = new ArgumentNullException("result");
+            Student studentNull=null;
             _studentsRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Student>(), It.IsAny<CancellationToken>()))
-                .Throws(ex);
+                .ReturnsAsync(studentNull);
 
-   
-            var student = new CreateStudentModel()
-            {
-                FamilienName = "www"
-            };
-
+            var student = new CreateStudentModel() { FamilienName = "www" };
 
             //Act
             var result = await _studentsController.AddAsync(student, _cancellationToken);
@@ -117,7 +111,7 @@ namespace UnitTestController
                     LogLevel.Error,
                     It.IsAny<EventId>(),
                     It.IsAny<It.IsAnyType>(),
-                    ex,
+                    exception,
                     (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
                 Times.Once);
 
@@ -129,7 +123,7 @@ namespace UnitTestController
 
 
         [Fact]
-        public async void CreateStudentSuccessful_OkResult()
+        public async void AddAsync_ValidData_OkResult()
         {
             //Arrange
             var student = new CreateStudentModel()
