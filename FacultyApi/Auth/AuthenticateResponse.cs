@@ -22,7 +22,7 @@ namespace FacultyApi.Auth
 
 
 
-            //this will be a new comment
+            //this will be a updated new comment
             //this will be a new comment
             //this will be a new comment
 
@@ -35,7 +35,7 @@ namespace FacultyApi.Auth
 
             //this will be a new comment
 
-            //this will be a new comment
+            //this will be a updated new comment
 
         }
     }
