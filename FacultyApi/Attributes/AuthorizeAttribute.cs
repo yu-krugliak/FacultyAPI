@@ -12,6 +12,7 @@ namespace FacultyApi.Attributes
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
+            //new comment to attribute
             var user = (User)context.HttpContext.Items["Login"];
             if (user == null)
             {
