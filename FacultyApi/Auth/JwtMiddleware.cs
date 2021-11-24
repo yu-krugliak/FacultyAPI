@@ -12,12 +12,12 @@ namespace FacultyApi.Auth
     public class JwtMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly FacultyApi.AuthOptions _appSettings;
+        private readonly AuthOptions _authOptions;
 
-        public JwtMiddleware(RequestDelegate next, IOptions<FacultyApi.AuthOptions> appSettings)
+        public JwtMiddleware(RequestDelegate next, IOptions<AuthOptions> authOptions)
         {
             _next = next;
-            _appSettings = appSettings.Value;
+            _authOptions = authOptions.Value;
         }
 
         public async Task Invoke(HttpContext context, IUserService userService)
@@ -25,24 +25,23 @@ namespace FacultyApi.Auth
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
             if (token != null)
-                attachUserToContext(context, userService, token);
+                AttachUserToContext(context, userService, token);
 
             await _next(context);
         }
 
-        private void attachUserToContext(HttpContext context, IUserService userService, string token)
+        private void AttachUserToContext(HttpContext context, IUserService userService, string token)
         {
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var key = Encoding.ASCII.GetBytes(_authOptions.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                     ClockSkew = TimeSpan.Zero
                 }, out SecurityToken validatedToken);
 
@@ -50,7 +49,7 @@ namespace FacultyApi.Auth
                 var userId = Guid.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
                 // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetById(userId);
+                context.Items["Login"] = userService.GetById(userId);
             }
             catch
             {

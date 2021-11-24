@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Db.IRepository;
 using Db.Models;
 using Db.Models.Students;
+using FacultyApi.Attributes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FacultyApi.Auth
@@ -20,8 +25,11 @@ namespace FacultyApi.Auth
             new User() {UserId = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa9"), Login = "Admin", Password = "1111", Role = "Admin"}
         };
 
-        public UserService()
+        private readonly AuthOptions _authOptions;
+
+        public UserService(IOptions<AuthOptions> authOptions)
         {
+            _authOptions = authOptions.Value;
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
@@ -45,17 +53,22 @@ namespace FacultyApi.Auth
 
         private string GenerateJwtToken(User user)
         {
-            var now = DateTime.UtcNow;
+            if (_authOptions.Secret == null)
+            {
+                throw new ArgumentNullException(nameof(_authOptions.Secret));
+            }
 
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                notBefore: now,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return encodedJwt;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_authOptions.Secret);
+            
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using FacultyApi.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -35,8 +36,9 @@ namespace FacultyApi
             services.AddDbServices(Configuration)
                 .AddAutoMapper(typeof(Startup));
             services.AddControllers();
-            services.AddTransient<IUserService, UserService>();
 
+            services.Configure<AuthOptions>(Configuration.GetSection(AuthOptions.Auth));
+            services.AddTransient<IUserService, UserService>();
 
             services.AddApiVersioning(o => { o.ReportApiVersions = true; })
                 .AddVersionedApiExplorer(options =>
@@ -51,29 +53,47 @@ namespace FacultyApi
                     Title = "V2",
                     Version = "v2"
                 });
+
+                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                option.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        }, new List<string>()
+                    }
+                });
+
                 option.SwaggerDoc("v1", new OpenApiInfo()
                 {
                     Title = "V1",
                     Version = "v1"
                 });
             });
-
-            services
-                .AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-                .AddNegotiate();
-
-            services.Configure<AuthOptions>(Configuration.GetSection("AppSettings"));
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiDescriptionProvider)
         {
-
             if (env.IsDevelopment())
             {
-
-
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(options =>
@@ -98,6 +118,8 @@ namespace FacultyApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseSwagger(c =>
             {
