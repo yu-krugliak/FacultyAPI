@@ -18,6 +18,7 @@ namespace FacultyApi.Auth
             Password = user.Password;
             Role = user.Role;
             Token = token;
+            //this will be a new comment
         }
     }
 }
