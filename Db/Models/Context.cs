@@ -113,6 +113,63 @@ namespace Db.Models
                 entity.Property(lesson => lesson.Semester);
                 entity.Property(lesson => lesson.DayAndTime);
             });
+
+            //var group = new Group()
+            //{
+            //    Name = "IM420"
+            //};
+            ////var group = new Group()
+            ////{
+            ////    Name = "IM420"
+            ////};
+
+            //Groups?.Add(group);
+            //SaveChanges();
+            ////Groups?.Add(group);
+            ////SaveChanges();
+
+            //var educationType = new EducationType()
+            //{
+            //    Name = "Очный"
+            //};
+            ////var educationType = new EducationType()
+            ////{
+            ////    Name = "Очный"
+            ////};
+
+            //EducationTypes?.Add(educationType);
+            //SaveChanges();
+            ////EducationTypes?.Add(educationType);
+            ////SaveChanges();
+
+            //var student = new Student()
+            //{
+            //    FirstName = "Владислав",
+            //    SecondName = "Ильченко",
+            //    MiddleName = "Алексеевич",
+            //    PhoneNumber = "0995031137",
+            //    YearEntry = new DateTime(2018, 08, 01),
+            //    Expelled = false,
+            //    EducationTypeId = null,
+            //    GroupId = null
+            //};
+            ////var student = new Student()
+            ////{
+            ////    FirstName = "Владислав",
+            ////    SecondName = "Ильченко",
+            ////    MiddleName = "Алексеевич",
+            ////    PhoneNumber = "0995031137",
+            ////    YearEntry = new DateTime(2018, 08, 01),
+            ////    Expelled = false,
+            ////    EducationTypeId = 1,
+            ////    GroupId = 1
+            ////};
+
+            //Students?.Add(student);
+            //SaveChanges();
+            ////Students?.Add(student);
+            ////SaveChanges();
         }
     }
+    
 }

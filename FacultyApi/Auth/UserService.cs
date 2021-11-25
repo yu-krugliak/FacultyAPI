@@ -17,6 +17,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FacultyApi.Auth
 {
+
+    /// <summary>
+    /// User Service
+    /// </summary>
+    /// <seealso cref="FacultyApi.Auth.IUserService" />
     public class UserService : IUserService
     {
         private readonly List<User> _users = new List<User>()
@@ -27,11 +32,20 @@ namespace FacultyApi.Auth
 
         private readonly AuthOptions _authOptions;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// </summary>
+        /// <param name="authOptions">The authentication options.</param>
         public UserService(IOptions<AuthOptions> authOptions)
         {
             _authOptions = authOptions.Value;
         }
 
+        /// <summary>
+        /// Authenticates the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _users.SingleOrDefault(x => x.Login == model.Login && x.Password == model.Password);
@@ -41,11 +55,20 @@ namespace FacultyApi.Auth
             return new AuthenticateResponse(user, token);
         }
 
+        /// <summary>
+        /// Gets all.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<User> GetAll()
         {
             return _users;
         }
-        
+
+        /// <summary>
+        /// Gets the by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns></returns>
         public User GetById(Guid id)
         {
             return _users.FirstOrDefault(x => x.UserId == id);

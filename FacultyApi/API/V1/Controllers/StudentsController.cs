@@ -34,7 +34,7 @@ namespace FacultyApi.API.V1.Controllers
         //    _logger.LogInformation($"StudentsGetAll");
 
         //    var student = _studentsRepository
-        //        .GetAll()
+        //        .GetAllFilteredAsync(null, null, null)
         //        .Select(s => new StudentDto(s));
 
         //    return Ok(student);

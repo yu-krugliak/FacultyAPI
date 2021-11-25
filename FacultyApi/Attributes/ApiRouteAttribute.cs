@@ -4,7 +4,7 @@ namespace FacultyApi.Attributes
 {
     public class ApiRouteAttribute : RouteAttribute
     {
-        public ApiRouteAttribute () : base("api/v{version:apiVersion}/[controller]")
+        public ApiRouteAttribute () : base("api/v{version:apiVersion}/[controller]/[action]")
         { }
     }
 

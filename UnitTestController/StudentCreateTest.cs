@@ -28,15 +28,15 @@ namespace UnitTestController
         public StudentCreateTest()
         {
             this._studentsRepositoryMock = new Mock<IStudentsRepository>();
-            _mapperMock = new Mock<IMapper>();
+            this._mapperMock = new Mock<IMapper>();
 
-            _cancellationToken = new CancellationTokenSource().Token;
-            _logger = new Mock<ILogger<StudentsController>>();
+            this._cancellationToken = new CancellationTokenSource().Token;
+            this._logger = new Mock<ILogger<StudentsController>>();
             this._logger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>()))
                 .Returns(true)
                 .Callback(() => this._logger.Verify(logger => logger.IsEnabled(It.IsAny<LogLevel>())));
 
-            _studentsController = new StudentsController(_studentsRepositoryMock.Object, _logger.Object, _mapperMock.Object);
+            this._studentsController = new StudentsController(_studentsRepositoryMock.Object, _logger.Object, _mapperMock.Object);
 
         }
 
