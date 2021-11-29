@@ -45,7 +45,7 @@ namespace FacultyApi.API.V2.Controllers
                     throw new ArgumentNullException(nameof(result));
                 }
 
-                return Ok(student);
+                return Ok(newStudent);
             }
             catch(Exception ex)
             {

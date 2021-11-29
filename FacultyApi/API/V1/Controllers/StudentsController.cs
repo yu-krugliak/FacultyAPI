@@ -83,7 +83,7 @@ namespace FacultyApi.API.V1.Controllers
                 var newStudent = _mapper.Map<Student>(student);
                 await _studentsRepository.UpdateAsync(newStudent, cancellationToken);
 
-                return Ok(student);
+                return Ok(newStudent);
             }
             catch
             {
