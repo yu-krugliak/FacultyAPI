@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Db.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -22,9 +23,9 @@ namespace Api.Integration.Test
                 var aa = services.FirstOrDefault(a => "IHostedService" == a.GetType().Name);
 
                 services.RemoveAll(typeof(IHostedService));
-                var a = services.FirstOrDefault(a => typeof(IHostedService) == a.GetType());
+                var a = services.FirstOrDefault(a => typeof(IHost) == a.GetType());
 
-                services.AddDbContext<DbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+                services.AddDbContext<Context>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
                 var aaa = services.FirstOrDefault(a => typeof(IHostedService) == a.GetType());
 
@@ -32,7 +33,7 @@ namespace Api.Integration.Test
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<DbContext>();
+                    var db = scopedServices.GetRequiredService<Context>();
                     db.Database.EnsureCreated();
 
                 }

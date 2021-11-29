@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Db.Models.Students;
 using FacultyApi;
 using System.Text.Json;
+using Db.Models;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,22 +16,33 @@ namespace Api.Integration.Test.Controllers
     public class StudentControllerTest : IClassFixture<TestWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _httpClient;
-        private readonly DbContext _dbContext;
+        private readonly Context _dbContext;
+
+        private readonly Student _testStudent;
 
         public StudentControllerTest(TestWebApplicationFactory<Startup> _startup)
         {
             var scopeFactory = _startup.Services.GetService<IServiceScopeFactory>();
-            _dbContext = scopeFactory.CreateScope().ServiceProvider.GetService<DbContext>();
+            _dbContext = scopeFactory.CreateScope().ServiceProvider.GetService<Context>();
 
-            var dbOptions = new DbContextOptionsBuilder<DbContext>().UseInMemoryDatabase($"DB: {Guid.NewGuid()}").Options;
-            var appContex = new DbContext(dbOptions);
-            //appContex. .AddRange(_usersList);
-            appContex.SaveChanges();
+            //var dbOptions = new DbContextOptionsBuilder<DbContext>().UseInMemoryDatabase($"DB: {Guid.NewGuid()}").Options;
+            //var appContex = new DbContext(dbOptions);
+            //appContex.AddRange(_usersList);
+            //appContex.SaveChanges();
+
+            var studentEntry = _dbContext.Students.Add(new Student
+            {
+                FirstName = "TEST"
+            });
+            _dbContext.SaveChanges();
+
+            studentEntry.State = EntityState.Detached;
+            _testStudent = studentEntry.Entity;
 
             _httpClient = _startup.WithWebHostBuilder(builder =>
                 builder.ConfigureTestServices(services =>
                 {
-                    services.AddSingleton<DbContext>(_dbContext);
+                    services.AddSingleton(_dbContext);
                 })
                 ).CreateClient();
         }
@@ -43,9 +56,9 @@ namespace Api.Integration.Test.Controllers
 
         //}
 
-        [Theory]
-        [InlineData(null, null, null)]
-        public async Task GetFiltered_SuccessInvocation_ReturnOk(Guid? groupId, bool? expelled, string secondName)
+
+        [Fact]
+        public async Task GetFiltered_SuccessInvocation_ReturnOk(/*Guid? groupId, bool? expelled, string secondName*/)
         {
             // Arrange
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered");
@@ -57,12 +70,11 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Theory]
-        [InlineData (null)]
-        public async Task GetAsync_SuccessInvocation_ReturnOk(Guid? id)
+        [Fact]
+        public async Task GetAsync_SuccessInvocation_ReturnOk()
         {
             // Arrange
-            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/get");
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/get/{_testStudent.StudentId}");
 
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
@@ -77,7 +89,7 @@ namespace Api.Integration.Test.Controllers
             // Arrange
             var requestStudent = new UpdateStudentModel()
             {
-                StudentId = new Guid("9245fe4a-d402-451c-b9ed-9c1a04247482"),
+                StudentId = _testStudent.StudentId,
                 FirstName = "Yui",
                 SecondName = "Weri",
                 MiddleName = "loi",
@@ -89,25 +101,25 @@ namespace Api.Integration.Test.Controllers
             var httpRequest = new HttpRequestMessage()
             {
                 Method = HttpMethod.Put,
-                RequestUri = new Uri($"/api/v1/students/update"),
-                Content = new StringContent(jsonRequestStudent)
+                RequestUri = new Uri($"/api/v1/students/update", UriKind.Relative),
+                Content = new StringContent(jsonRequestStudent, Encoding.Default, "application/json")
             };
             
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
             var jsonResponseContent = await response.Content.ReadAsStringAsync();
 
-            var responseContent = JsonSerializer.Deserialize<Student>(jsonResponseContent);
+            var responseContent = JsonSerializer.Deserialize<Student>(jsonResponseContent); //Failing to deserialize
 
             // Assert
-            Assert.Equal(responseContent.StudentId, requestStudent.StudentId);
-            Assert.Equal(responseContent.FirstName, requestStudent.FirstName);
-            Assert.Equal(responseContent.SecondName, requestStudent.SecondName);
-            Assert.Equal(responseContent.MiddleName, requestStudent.MiddleName);
-            Assert.Equal(responseContent.YearEntry, requestStudent.YearEntry);
-            Assert.Equal(responseContent.Expelled, requestStudent.Expelled);
-
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+
+            Assert.Equal(requestStudent.StudentId, responseContent.StudentId);
+            Assert.Equal(requestStudent.FirstName, responseContent.FirstName);
+            Assert.Equal(requestStudent.SecondName, responseContent.SecondName);
+            Assert.Equal(requestStudent.MiddleName, responseContent.MiddleName);
+            Assert.Equal(requestStudent.YearEntry, responseContent.YearEntry);
+            Assert.Equal(requestStudent.Expelled, responseContent.Expelled);
         }
 
     }
