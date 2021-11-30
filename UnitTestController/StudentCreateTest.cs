@@ -66,13 +66,19 @@ namespace UnitTestController
             this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
             this._studentsRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Exactly(0));
 
+            this._logger.VerifyNoOtherCalls();
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
 
+        public async void AddAsync_CanceledCancelationToken_BadRequestResult()
+        {
+            var _cancellationToken = new CancellationTokenSource().Token;
+
+        }
 
         [Fact]
-        public async void AddAsync_NullResult_BadRequestResult()
+        public async void AddAsync_RepositoryNullResult_BadRequestResult()
         {
             //Arrange
             var ex = new ArgumentNullException("result");
@@ -94,9 +100,6 @@ namespace UnitTestController
             var exception = (Exception)objectResult.Value;
 
             Assert.Equal(ex.Message, exception.Message);
-
-            var str = $"StudentPut:\n{JsonConvert.SerializeObject(student)}";
-
 
             this._mapperMock.Verify(m => m.Map<Student>(student), Times.Once);
             this._studentsRepositoryMock.Verify(s => s.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Once);

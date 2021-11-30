@@ -85,7 +85,7 @@ namespace Api.Integration.Test.Controllers
         
         
         [Fact]
-        public async Task DeleteAsync_PropertyId_ReturnOk()
+        public async Task DeleteAsync_ExistedId_ReturnOk()
         {
             // Arrange
             var httpRequest = new HttpRequestMessage(HttpMethod.Delete, $"/api/v2/students/delete/{_testStudent.StudentId}");
