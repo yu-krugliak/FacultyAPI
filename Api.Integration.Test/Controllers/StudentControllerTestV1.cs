@@ -107,8 +107,9 @@ namespace Api.Integration.Test.Controllers
                 GroupId = groupId
             });
             _dbContext.SaveChanges();
-            var countStudents = _dbContext.Students.Count(st => st.GroupId == groupId);
-
+            var dbFilteredStudents = _dbContext.Students.Where(st =>
+                st.GroupId == groupId);
+            var countStudents = dbFilteredStudents.Count();
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?groupId={groupId}");
 
             // Act
@@ -120,8 +121,8 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(countStudents, responseContent.Count);
 
-            Assert.Equal(_dbContext.Students.First(st => st.GroupId == groupId).StudentId, responseContent.First().StudentId);
-            Assert.Equal(_dbContext.Students.First(st => st.GroupId == groupId).FirstName, responseContent.First().FirstName);
+            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
+            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
         }
 
         [Theory]
@@ -145,7 +146,9 @@ namespace Api.Integration.Test.Controllers
                 SecondName = "Third",
             });
             _dbContext.SaveChanges();
-            var countStudents = _dbContext.Students.Count(st => st.SecondName == secondName);
+            var dbFilteredStudents = _dbContext.Students.Where(st =>
+                st.SecondName == secondName);
+            var countStudents = dbFilteredStudents.Count();
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?secondName={secondName}");
 
@@ -158,8 +161,8 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(countStudents, responseContent.Count);
 
-            Assert.Equal(_dbContext.Students.First(st => st.SecondName == secondName).StudentId, responseContent.First().StudentId);
-            Assert.Equal(_dbContext.Students.First(st => st.SecondName == secondName).FirstName, responseContent.First().FirstName);
+            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
+            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
         }
 
         [Theory]
@@ -185,7 +188,9 @@ namespace Api.Integration.Test.Controllers
                 Expelled = expelled
             });
             _dbContext.SaveChanges();
-            var countStudents = _dbContext.Students.Count(st => st.Expelled == expelled);
+            var dbFilteredStudents = _dbContext.Students.Where(st => 
+                st.Expelled == expelled);
+            var countStudents = dbFilteredStudents.Count();
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?expelled={expelled}");
 
@@ -198,8 +203,8 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
             Assert.Equal(countStudents, responseContent.Count);
 
-            Assert.Equal(_dbContext.Students.First(st => st.Expelled == expelled).StudentId, responseContent.First().StudentId);
-            Assert.Equal(_dbContext.Students.First(st => st.Expelled == expelled).FirstName, responseContent.First().FirstName);
+            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
+            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
         }
 
         [Theory]

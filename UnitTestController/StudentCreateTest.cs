@@ -41,7 +41,7 @@ namespace UnitTestController
         }
 
         [Fact]
-        public async void AddAsync_ThrowsException_BadRequestResult()
+        public async void AddAsync_MapperDontWork_BadRequestResult()
         {
             //Arrange
             var exception = new Exception("Message_error"); 
@@ -65,6 +65,19 @@ namespace UnitTestController
 
             this._mapperMock.Verify(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()), Times.Exactly(1));
             this._studentsRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<Student>(), this._cancellationToken), Times.Exactly(0));
+
+            _logger.Verify(x => x.Log(LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.IsAny<It.IsAnyType>(),
+                null,
+                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
+            _logger.Verify(x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    exception,
+                    (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+                Times.Once);
 
             this._logger.VerifyNoOtherCalls();
             this._mapperMock.VerifyNoOtherCalls();
@@ -134,7 +147,7 @@ namespace UnitTestController
                 FamilienName = "www"
             };
 
-            _mapperMock.Setup(maper => maper.Map<Student>(It.IsAny<CreateStudentModel>()))
+            _mapperMock.Setup(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()))
                .Returns(new Student());
 
             
