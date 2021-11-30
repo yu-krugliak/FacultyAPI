@@ -29,12 +29,14 @@ namespace Api.Integration.Test.Controllers
             
             _dbContext = new Context(buider.Options);
             _studentId = Guid.NewGuid();
-            _dbContext.Students.Add(new Student
+            var entityEntry = _dbContext.Students.Add(new Student
             {
                 StudentId = _studentId,
                 FirstName = "TEST"
             });
             _dbContext.SaveChanges();
+            entityEntry.State = EntityState.Detached;
+
 
             _httpClient = _startup.WithWebHostBuilder(builder =>
                 builder.ConfigureTestServices(services =>
@@ -167,6 +169,7 @@ namespace Api.Integration.Test.Controllers
 
         [Theory]
         [InlineData(true)]
+        [InlineData(false)]
         public async Task GetFiltered_ExpelledFilterValue_ReturnListStudentsFilteredByExpelledReturnOk(bool expelled)
         {
             // Arrange
@@ -257,6 +260,44 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
         }
 
+        [Theory]
+        [InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d", true, "NotFirst")]
+        [InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6f", false, "NotSecond")]
+        public async Task GetFiltered_AllFilterValue_ReturnEmptyListReturnNotFound(Guid groupId, bool expelled, string secondName)
+        {
+            // Arrange
+            _dbContext.Students.Add(new Student
+            {
+                StudentId = Guid.NewGuid(),
+                SecondName = "First",
+                GroupId = groupId,
+                Expelled = expelled
+            });
+            _dbContext.Students.Add(new Student
+            {
+                StudentId = Guid.NewGuid(),
+                SecondName = "Second",
+                GroupId = groupId,
+                Expelled = expelled
+            });
+            _dbContext.Students.Add(new Student
+            {
+                StudentId = Guid.NewGuid(),
+                SecondName = "Second",
+                GroupId = groupId,
+                Expelled = expelled
+            });
+            _dbContext.SaveChanges();
+
+            var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?groupId={groupId}&expelled={expelled}&secondName={secondName}");
+
+
+            // Act
+            var response = await _httpClient.SendAsync(httpRequest);
+
+            // Assert
+            Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        }
         [Fact]
         public async Task GetAsync_ExsistedId_ReturnStudentReturnOk()
         {
@@ -302,7 +343,7 @@ namespace Api.Integration.Test.Controllers
             {
                 Method = HttpMethod.Put,
                 RequestUri = new Uri($"/api/v1/students/update", UriKind.Relative),
-                Content = new StringContent(jsonRequestStudent, Encoding.Default, "application/json")
+                Content = new StringContent(jsonRequestStudent, Encoding.UTF8, "application/json")
             };
 
 
@@ -322,6 +363,37 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(requestStudent.MiddleName, responseContent.MiddleName);
             Assert.Equal(requestStudent.YearEntry, responseContent.YearEntry);
             Assert.Equal(requestStudent.Expelled, responseContent.Expelled);
+        }
+
+        [Theory]
+        [InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d")]
+        public async Task UpdateAsync_StudentInvalidData_ReturnBadRequest(Guid studentId)
+        {
+            // Arrange
+            var requestStudent = new UpdateStudentModel()
+            {
+                StudentId = studentId,
+                FirstName = "Yui",
+                SecondName = "Weri",
+                MiddleName = "loi",
+                YearEntry = new DateTime(),
+                Expelled = true
+            };
+            var jsonRequestStudent = JsonSerializer.Serialize(requestStudent);
+
+            var httpRequest = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Put,
+                RequestUri = new Uri($"/api/v1/students/update", UriKind.Relative),
+                Content = new StringContent(jsonRequestStudent, Encoding.Default, "application/json")
+            };
+
+
+            // Act
+            var response = await _httpClient.SendAsync(httpRequest);
+
+            // Assert
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }

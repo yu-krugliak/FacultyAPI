@@ -85,9 +85,9 @@ namespace FacultyApi.API.V1.Controllers
 
                 return Ok(newStudent);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
     }
