@@ -24,7 +24,7 @@ namespace Db.Repository
             ///*s*/student.StudentId = null;
 
             await _context.Students.AddAsync(student, cancellationToken);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
             return student;
         }
 
@@ -32,7 +32,7 @@ namespace Db.Repository
         {
             return await _context.Students
                 .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.StudentId == id);
+                .FirstOrDefaultAsync(s => s.StudentId == id, cancellationToken);
         }
 
         public async Task<List<Student>> GetAllAsync(CancellationToken cancellationToken)

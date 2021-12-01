@@ -89,6 +89,7 @@ namespace FacultyApi.API.V1.Controllers
             {
                 return BadRequest(ex);
             }
+
         }
     }
 }

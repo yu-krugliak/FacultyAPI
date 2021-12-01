@@ -5,6 +5,7 @@ namespace Db.Models.Students
 {
     public class CreateStudentModel
     {
+        [Required(ErrorMessage = "Please enter familien name.")]
         public string FamilienName { get; set; }
         public string Name { get; set; }
         public string MidName { get; set; }

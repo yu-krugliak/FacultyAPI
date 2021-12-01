@@ -60,8 +60,14 @@ namespace FacultyApi.API.V2.Controllers
         {
             _logger.LogInformation($"StudentDelete, id: {id}");
 
+            var student = await _studentsRepository.GetAsync(id, cancellationToken);
+            if (student == null)
+            {
+                return NotFound("Student not found.");
+            }
+
             await _studentsRepository.DeleteAsync(id, cancellationToken);
-            return Ok("Student deleted.");
+            return Ok(student);
         }
     }
 }

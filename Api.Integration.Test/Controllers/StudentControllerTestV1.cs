@@ -66,7 +66,7 @@ namespace Api.Integration.Test.Controllers
                 StudentId = Guid.NewGuid(),
                 FirstName = "Third"
             });
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered");
 
@@ -77,13 +77,7 @@ namespace Api.Integration.Test.Controllers
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(_dbContext.Students.Count(), responseContent.Count);
-
-            Assert.Equal(_dbContext.Students.First().StudentId, responseContent.First().StudentId);
-            Assert.Equal(_dbContext.Students.First().FirstName, responseContent.First().FirstName);
-
-            Assert.Equal(_dbContext.Students.Last().StudentId, responseContent.Last().StudentId);
-            Assert.Equal(_dbContext.Students.Last().FirstName, responseContent.Last().FirstName);
+            Assert.Equal(4, responseContent.Count);
         }
 
         [Theory]
@@ -108,23 +102,25 @@ namespace Api.Integration.Test.Controllers
                 FirstName = "Third",
                 GroupId = groupId
             });
-            _dbContext.SaveChanges();
-            var dbFilteredStudents = _dbContext.Students.Where(st =>
+            await _dbContext.SaveChangesAsync();
+            var countStudents = _dbContext.Students.Count(st =>
                 st.GroupId == groupId);
-            var countStudents = dbFilteredStudents.Count();
+
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?groupId={groupId}");
 
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
             var jsonResponseContent = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
+            var resultStudents = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(countStudents, responseContent.Count);
+            Assert.Equal(countStudents, resultStudents.Count);
 
-            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
-            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
+            foreach (var student in resultStudents)
+            {
+                Assert.Equal(groupId, student.GroupId);
+            }
         }
 
         [Theory]
@@ -148,23 +144,25 @@ namespace Api.Integration.Test.Controllers
                 SecondName = "Third",
             });
             _dbContext.SaveChanges();
-            var dbFilteredStudents = _dbContext.Students.Where(st =>
+            
+            var countStudents = _dbContext.Students.Count(st =>
                 st.SecondName == secondName);
-            var countStudents = dbFilteredStudents.Count();
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?secondName={secondName}");
 
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
             var jsonResponseContent = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
+            var resultStudents = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(countStudents, responseContent.Count);
+            Assert.Equal(countStudents, resultStudents.Count);
 
-            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
-            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
+            foreach (var student in resultStudents)
+            {
+                Assert.Equal(secondName, student.SecondName);
+            }
         }
 
         [Theory]
@@ -190,24 +188,25 @@ namespace Api.Integration.Test.Controllers
                 FirstName = "Third",
                 Expelled = expelled
             });
-            _dbContext.SaveChanges();
-            var dbFilteredStudents = _dbContext.Students.Where(st => 
+            await _dbContext.SaveChangesAsync();
+            var countStudents = _dbContext.Students.Count(st =>
                 st.Expelled == expelled);
-            var countStudents = dbFilteredStudents.Count();
 
             var httpRequest = new HttpRequestMessage(HttpMethod.Get, $"/api/v1/students/getfiltered?expelled={expelled}");
 
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
             var jsonResponseContent = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
+            var resultStudents = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(countStudents, responseContent.Count);
+            Assert.Equal(countStudents, resultStudents.Count);
 
-            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
-            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
+            foreach (var student in resultStudents)
+            {
+                Assert.Equal(expelled, student.Expelled);
+            }
         }
 
         [Theory]
@@ -237,7 +236,7 @@ namespace Api.Integration.Test.Controllers
                 GroupId = groupId,
                 Expelled = expelled
             });
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             var dbFilteredStudents = _dbContext.Students.Where(st =>
                 st.SecondName == secondName
@@ -250,14 +249,18 @@ namespace Api.Integration.Test.Controllers
             // Act
             var response = await _httpClient.SendAsync(httpRequest);
             var jsonResponseContent = await response.Content.ReadAsStringAsync();
-            var responseContent = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
+            var resultStudents = JsonSerializer.Deserialize<List<Student>>(jsonResponseContent);
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(countStudents, responseContent.Count);
+            Assert.Equal(countStudents, resultStudents.Count);
 
-            Assert.Equal(dbFilteredStudents.First().StudentId, responseContent.First().StudentId);
-            Assert.Equal(dbFilteredStudents.First().FirstName, responseContent.First().FirstName);
+            foreach (var student in resultStudents)
+            {
+                Assert.Equal(groupId, student.GroupId);
+                Assert.Equal(expelled, student.Expelled);
+                Assert.Equal(secondName, student.SecondName);
+            }
         }
 
         [Theory]
@@ -309,6 +312,7 @@ namespace Api.Integration.Test.Controllers
 
             // Assert
             Assert.Equal(System.Net.HttpStatusCode.OK, response.StatusCode);
+            Assert.NotEmpty(await response.Content.ReadAsStringAsync());
         }
 
         [Fact]
@@ -365,14 +369,14 @@ namespace Api.Integration.Test.Controllers
             Assert.Equal(requestStudent.Expelled, responseContent.Expelled);
         }
 
-        [Theory]
-        [InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d")]
-        public async Task UpdateAsync_StudentInvalidData_ReturnBadRequest(Guid studentId)
+        //[Theory]
+        //[InlineData("00ebf684-3797-473b-a503-a88c1c4cbb6d")]
+        [Fact]
+        public async Task UpdateAsync_StudentInvalidData_ReturnBadRequest()
         {
             // Arrange
             var requestStudent = new UpdateStudentModel()
             {
-                StudentId = studentId,
                 FirstName = "Yui",
                 SecondName = "Weri",
                 MiddleName = "loi",
@@ -386,6 +390,26 @@ namespace Api.Integration.Test.Controllers
                 Method = HttpMethod.Put,
                 RequestUri = new Uri($"/api/v1/students/update", UriKind.Relative),
                 Content = new StringContent(jsonRequestStudent, Encoding.Default, "application/json")
+            };
+
+
+            // Act
+            var response = await _httpClient.SendAsync(httpRequest);
+
+            // Assert
+            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateAsync_EmptyContent_ReturnBadRequest()
+        {
+            // Arrange
+
+            var httpRequest = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Put,
+                RequestUri = new Uri($"/api/v1/students/update", UriKind.Relative),
+                Content = new StringContent(String.Empty, Encoding.UTF8, "application/json")
             };
 
 

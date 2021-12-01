@@ -149,8 +149,10 @@ namespace UnitTestController
 
             _mapperMock.Setup(mapper => mapper.Map<Student>(It.IsAny<CreateStudentModel>()))
                .Returns(new Student());
+            _studentsRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Student>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Student());
 
-            
+
             //Act
             var result = await _studentsController.AddAsync(student, _cancellationToken);
 
@@ -166,6 +168,7 @@ namespace UnitTestController
                 null,
                 (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()), Times.Once);
 
+            this._logger.VerifyNoOtherCalls();
             this._mapperMock.VerifyNoOtherCalls();
             this._studentsRepositoryMock.VerifyNoOtherCalls();
         }
